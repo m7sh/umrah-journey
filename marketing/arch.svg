@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 520" fill="none">
+  <defs>
+    <linearGradient id="goldLine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f2d99c" stop-opacity="0.95"/>
+      <stop offset="55%" stop-color="#d7b06a" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#b58a3c" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="kiswah" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8f6a2b"/>
+      <stop offset="18%" stop-color="#d7b06a"/>
+      <stop offset="38%" stop-color="#f2d99c"/>
+      <stop offset="58%" stop-color="#d7b06a"/>
+      <stop offset="80%" stop-color="#b58a3c"/>
+      <stop offset="100%" stop-color="#8f6a2b"/>
+    </linearGradient>
+    <radialGradient id="kaabaGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#d7b06a" stop-opacity="0.17"/>
+      <stop offset="100%" stop-color="#d7b06a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <ellipse cx="190" cy="335" rx="152" ry="152" fill="url(#kaabaGlow)"/>
+
+  <!-- mihrab arch -->
+  <path d="M46 486V210a144 144 0 0 1 288 0v276" stroke="url(#goldLine)" stroke-width="1.6"/>
+  <path d="M60 486V212a130 130 0 0 1 260 0v274" stroke="#d7b06a" stroke-opacity="0.26" stroke-width="1"/>
+  <path d="M32 486h316" stroke="url(#goldLine)" stroke-width="1.4" stroke-linecap="round"/>
+
+  <!-- eight point star -->
+  <path d="M190 96l7 15 16-6-7 15 15 7-15 7 7 15-16-6-7 15-7-15-16 6 7-15-15-7 15-7-7-15 16 6z"
+        fill="#d7b06a" fill-opacity="0.14" stroke="#d7b06a" stroke-width="1.1" stroke-linejoin="round"/>
+  <circle cx="190" cy="126" r="2.8" fill="#d7b06a" fill-opacity="0.9"/>
+
+  <!-- sparkles -->
+  <g stroke="#f2d99c" stroke-width="1.1" stroke-linecap="round" opacity="0.5">
+    <path d="M98 214v12M92 220h12"/>
+    <path d="M284 232v9M279.5 236.5h9"/>
+    <path d="M120 132v8M116 136h8"/>
+  </g>
+
+  <!-- kaaba -->
+  <ellipse cx="190" cy="424" rx="76" ry="9" fill="#000" opacity="0.32"/>
+  <g>
+    <rect x="122" y="262" width="136" height="160" fill="#08110d" stroke="#d7b06a" stroke-opacity="0.55"/>
+    <rect x="122" y="262" width="136" height="3" fill="#d7b06a" fill-opacity="0.35"/>
+    <rect x="122" y="298" width="136" height="22" fill="url(#kiswah)" fill-opacity="0.92"/>
+    <g stroke="#7d5510" stroke-width="0.7" opacity="0.5">
+      <path d="M129 298v22M137 298v22M145 298v22M153 298v22M161 298v22M169 298v22M177 298v22M185 298v22M193 298v22M201 298v22M209 298v22M217 298v22M225 298v22M233 298v22M241 298v22M249 298v22"/>
+    </g>
+    <rect x="214" y="336" width="22" height="56" fill="url(#kiswah)" fill-opacity="0.8"/>
+    <rect x="214" y="336" width="22" height="56" fill="none" stroke="#f2d99c" stroke-opacity="0.3" stroke-width="0.8"/>
+    <path d="M122 414h136" stroke="#d7b06a" stroke-opacity="0.2" stroke-width="1"/>
+  </g>
+
+  <!-- tawaf orbits -->
+  <g stroke="#d7b06a" fill="none" stroke-width="1" transform="rotate(-8 190 430)">
+    <ellipse cx="190" cy="430" rx="118" ry="26" opacity="0.3"/>
+    <ellipse cx="190" cy="430" rx="94" ry="20" opacity="0.2"/>
+    <ellipse cx="190" cy="430" rx="70" ry="14" opacity="0.13"/>
+  </g>
+</svg>
