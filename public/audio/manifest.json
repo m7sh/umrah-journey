@@ -1,0 +1,5 @@
+{
+  "_comment": "Optional real voiceover files. Keys use the form step:<step-id>:<lang> or dua:<dua-id>:<lang>, for example \"step:ihram:en\": \"/audio/step-ihram-en.mp3\". Any key that is missing falls back to the browser's speech synthesis.",
+  "_stepIds": ["ihram", "talbiyah", "first-sight", "tawaf", "maqam", "sai", "halq", "complete"],
+  "_languages": ["en", "ar", "ur"]
+}

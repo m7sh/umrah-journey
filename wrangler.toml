@@ -1,0 +1,17 @@
+name = "umrah-journey"
+main = "worker/index.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = true
+
+[observability]
+enabled = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "umrah-journey"
+database_id = "016600f0-55f2-47ad-8507-7101de519420"

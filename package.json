@@ -1,0 +1,17 @@
+{
+  "name": "umrah-journey",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An interactive, voice-guided walkthrough of Umrah with authentic duas, built for the Ummah.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "deploy": "npx wrangler deploy",
+    "preview": "npx wrangler dev",
+    "db:migrate": "npx wrangler d1 execute umrah-journey --remote --file=./migrations/0001_init.sql"
+  },
+  "engines": {
+    "node": ">=22.5"
+  }
+}

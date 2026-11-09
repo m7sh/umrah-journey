@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Umrah Journey — Visitor insights</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+  <div class="admin-shell">
+    <aside class="admin-side">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M12 2.5l2.6 6.9 6.9 2.6-6.9 2.6L12 21.5l-2.6-6.9L2.5 12l6.9-2.6z"/><circle cx="12" cy="12" r="2.6"/></svg>
+        </span>
+        <span class="brand-text"><span class="brand-name">Umrah Journey</span><span class="brand-sub">Visitor insights</span></span>
+      </a>
+
+      <nav class="admin-nav" id="adminNav" hidden>
+        <a href="#overview" class="active">Overview</a>
+        <a href="#traffic">Traffic</a>
+        <a href="#audience">Audience</a>
+        <a href="#journey">Journey</a>
+        <a href="#recent">Recent visits</a>
+      </nav>
+
+      <div class="admin-side-foot">
+        <a href="/" class="admin-back">← Back to the site</a>
+        <button class="admin-logout" id="logoutBtn" type="button" hidden>Sign out</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <section class="gate" id="gate">
+        <div class="gate-card">
+          <p class="eyebrow">Private dashboard</p>
+          <h1>Visitor insights</h1>
+          <p class="lead">Enter the admin token printed in your server console (also saved in <code>data/admin-token.txt</code>).</p>
+          <form id="gateForm" autocomplete="off">
+            <label for="tokenInput">Admin token</label>
+            <input id="tokenInput" type="password" name="token" placeholder="Paste your token" autocomplete="off" spellcheck="false" required>
+            <button class="btn btn-primary" type="submit">Open dashboard</button>
+            <p class="gate-error" id="gateError" role="alert"></p>
+          </form>
+          <p class="gate-note">Visits are stored anonymously. Raw IP addresses are never saved — only a salted daily hash, and the salt changes every day.</p>
+        </div>
+      </section>
+
+      <div id="dashboard" hidden>
+        <header class="admin-head">
+          <div>
+            <p class="eyebrow">Overview</p>
+            <h1 class="admin-title">Who is walking with you</h1>
+            <p class="admin-sub" id="generatedAt">—</p>
+          </div>
+          <div class="admin-actions">
+            <button class="btn btn-quiet" id="refreshBtn" type="button">Refresh</button>
+            <button class="btn btn-ghost" id="exportBtn" type="button">Export CSV</button>
+          </div>
+        </header>
+
+        <section id="overview" class="kpi-grid">
+          <article class="kpi">
+            <span class="kpi-label">Total visits</span>
+            <strong id="kpiVisits">—</strong>
+            <span class="kpi-hint">all time</span>
+          </article>
+          <article class="kpi">
+            <span class="kpi-label">Unique visitors</span>
+            <strong id="kpiUniques">—</strong>
+            <span class="kpi-hint">daily anonymous hashes</span>
+          </article>
+          <article class="kpi">
+            <span class="kpi-label">Today</span>
+            <strong id="kpiToday">—</strong>
+            <span class="kpi-hint" id="kpiTodayUniques">— unique</span>
+          </article>
+          <article class="kpi">
+            <span class="kpi-label">Last 7 days</span>
+            <strong id="kpi7">—</strong>
+            <span class="kpi-hint">visits</span>
+          </article>
+          <article class="kpi kpi-gold">
+            <span class="kpi-label">Journeys completed</span>
+            <strong id="kpiJourneys">—</strong>
+            <span class="kpi-hint">all eight steps</span>
+          </article>
+          <article class="kpi">
+            <span class="kpi-label">Countries</span>
+            <strong id="kpiCountries">—</strong>
+            <span class="kpi-hint">detected</span>
+          </article>
+        </section>
+
+        <section id="traffic" class="panel">
+          <div class="panel-head">
+            <h2>Visits, last 30 days</h2>
+            <span class="panel-note" id="chartTotal">—</span>
+          </div>
+          <div class="chart" id="chart" role="img" aria-label="Daily visits for the last 30 days"></div>
+        </section>
+
+        <div class="panel-grid" id="audience">
+          <section class="panel">
+            <div class="panel-head"><h2>Countries</h2></div>
+            <div class="bar-list" id="countries"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><h2>Devices</h2></div>
+            <div class="bar-list" id="devices"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><h2>Browsers</h2></div>
+            <div class="bar-list" id="browsers"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><h2>Referrers</h2></div>
+            <div class="bar-list" id="referrers"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><h2>Language chosen</h2></div>
+            <div class="bar-list" id="languages"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><h2>Pages</h2></div>
+            <div class="bar-list" id="pages"></div>
+          </section>
+        </div>
+
+        <section class="panel" id="journey">
+          <div class="panel-head">
+            <h2>Where pilgrims reached</h2>
+            <span class="panel-note">step completion events</span>
+          </div>
+          <div class="funnel" id="funnel"></div>
+        </section>
+
+        <section class="panel" id="recent">
+          <div class="panel-head">
+            <h2>Recent visits</h2>
+            <span class="panel-note">latest 25</span>
+          </div>
+          <div class="table-wrap" id="recentWrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>When</th><th>Page</th><th>Country</th><th>Device</th><th>Browser</th><th>OS</th><th>Language</th><th>Referrer</th></tr>
+              </thead>
+              <tbody id="recentBody"></tbody>
+            </table>
+          </div>
+          <p class="table-empty" id="recentEmpty" hidden>No visits recorded yet. Open the site in another tab to see it appear here.</p>
+        </section>
+
+        <p class="admin-foot">Data lives in <code>data/umrah.db</code> on this machine. Nothing is sent to a third party.</p>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="/js/admin.js"></script>
+</body>
+</html>
