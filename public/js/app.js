@@ -239,6 +239,7 @@ function stopMedia() {
     }
     activeAudio = null;
   }
+  clearWordHighlights();
   updatePlayUI();
 }
 
@@ -358,6 +359,161 @@ function playMedia({ key, text, lang, onend }) {
   speakText({ key, text, lang, onend });
 }
 
+function playAudioList({ key, sources, text, lang, onend }) {
+  const wasSame = currentKey === key;
+  stopMedia();
+  if (wasSame) return;
+
+  if (!state.voice) {
+    showToast(t(state.lang, 'voice.off'));
+    return;
+  }
+
+  const list = (sources || []).filter(Boolean);
+  if (!list.length) {
+    speakText({ key, text, lang, onend });
+    return;
+  }
+
+  const token = speechToken;
+  currentKey = key;
+  updatePlayUI();
+
+  let index = 0;
+  const fallback = () => {
+    if (token !== speechToken) return;
+    activeAudio = null;
+    currentKey = null;
+    clearWordHighlights();
+    updatePlayUI();
+    speakText({ key, text, lang, onend });
+  };
+
+  const next = () => {
+    if (token !== speechToken) return;
+    if (index >= list.length) {
+      activeAudio = null;
+      currentKey = null;
+      clearWordHighlights();
+      updatePlayUI();
+      onend?.();
+      return;
+    }
+    const audio = new Audio(list[index++]);
+    activeAudio = audio;
+    audio.onended = () => {
+      if (token !== speechToken) return;
+      next();
+    };
+    audio.onerror = fallback;
+    audio.play().catch(fallback);
+  };
+
+  next();
+}
+
+function clearWordHighlights() {
+  $$('.dua-word.is-playing').forEach((el) => el.classList.remove('is-playing'));
+}
+
+function setWordActive(card, index) {
+  if (!card) return;
+  $$('.dua-word', card).forEach((el) => {
+    el.classList.toggle('is-playing', Number(el.dataset.word) === index);
+  });
+}
+
+function playWord(dua, index, card) {
+  const word = dua.quran?.words?.[index];
+  if (!word) return;
+
+  const key = `dua:${dua.id}:word:${index}`;
+  const wasSame = currentKey === key;
+  stopMedia();
+  if (wasSame) return;
+
+  if (!state.voice) {
+    showToast(t(state.lang, 'voice.off'));
+    return;
+  }
+
+  const token = speechToken;
+  currentKey = key;
+  setWordActive(card, index);
+  updatePlayUI();
+
+  const audio = new Audio(word.src);
+  activeAudio = audio;
+  const finish = () => {
+    if (token !== speechToken) return;
+    activeAudio = null;
+    currentKey = null;
+    clearWordHighlights();
+    updatePlayUI();
+  };
+  audio.onended = finish;
+  audio.onerror = () => {
+    finish();
+    speakText({ key, text: word.ar, lang: 'ar' });
+  };
+  audio.play().catch(() => {
+    finish();
+    speakText({ key, text: word.ar, lang: 'ar' });
+  });
+}
+
+function playWords(dua, card) {
+  const words = dua.quran?.words || [];
+  if (!words.length) return;
+
+  const key = `dua:${dua.id}:words`;
+  const wasSame = currentKey === key;
+  stopMedia();
+  if (wasSame) return;
+
+  if (!state.voice) {
+    showToast(t(state.lang, 'voice.off'));
+    return;
+  }
+
+  const token = speechToken;
+  currentKey = key;
+  updatePlayUI();
+
+  let index = 0;
+  const fallback = () => {
+    if (token !== speechToken) return;
+    activeAudio = null;
+    currentKey = null;
+    clearWordHighlights();
+    updatePlayUI();
+    speakText({ key, text: words.map((word) => word.ar).join(' '), lang: 'ar' });
+  };
+
+  const next = () => {
+    if (token !== speechToken) return;
+    if (index >= words.length) {
+      activeAudio = null;
+      currentKey = null;
+      clearWordHighlights();
+      updatePlayUI();
+      return;
+    }
+    const current = index++;
+    setWordActive(card, current);
+    const audio = new Audio(words[current].src);
+    activeAudio = audio;
+    audio.onended = () => {
+      if (token !== speechToken) return;
+      next();
+    };
+    audio.onerror = fallback;
+    audio.play().catch(fallback);
+  };
+
+  next();
+}
+
 function updatePlayUI() {
   const step = STEPS[state.step];
   const narrationKey = `step:${step.id}:${state.lang}`;
@@ -376,6 +532,13 @@ function updatePlayUI() {
     button.classList.toggle('is-playing', currentKey === key);
     const label = button.querySelector('span');
     if (label) label.textContent = t(state.lang, currentKey === key ? 'dua.stop' : 'dua.play');
+  });
+  $$('.dua-words-play').forEach((button) => {
+    const key = `dua:${button.dataset.dua}:words`;
+    const playing = currentKey === key;
+    button.classList.toggle('is-playing', playing);
+    const label = button.querySelector('span');
+    if (label) label.textContent = t(state.lang, playing ? 'dua.stop' : 'dua.wordsPlay');
   });
 }
 
@@ -476,6 +639,8 @@ function duaCard(dua) {
   const meaning = state.lang === 'ur' ? dua.ur : dua.en;
   const note = dua.note ? pick(dua.note, state.lang) : '';
   const grade = pick(dua.grade, state.lang);
+  const quran = dua.quran;
+  const words = quran?.words || [];
   const searchBlob = [
     dua.id,
     dua.ar,
@@ -503,6 +668,10 @@ function duaCard(dua) {
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
           <span>${esc(t(state.lang, 'dua.play'))}</span>
         </button>
+        ${quran ? `<button class="dua-action dua-words-toggle" type="button" data-dua="${dua.id}" aria-expanded="false" aria-label="${esc(t(state.lang, 'dua.words'))}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M4 12h16M4 17h7"/></svg>
+          <span>${esc(t(state.lang, 'dua.words'))}</span>
+        </button>` : ''}
         <button class="dua-action dua-copy" type="button" data-dua="${dua.id}" aria-label="${esc(t(state.lang, 'dua.copy'))}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true">
             <rect x="8" y="8" width="11" height="12" rx="2"/><path d="M5 16V6a2 2 0 0 1 2-2h8"/>
@@ -512,6 +681,19 @@ function duaCard(dua) {
       </div>
     </div>
     <p class="dua-arabic" lang="ar" dir="rtl">${esc(dua.ar)}</p>
+    ${quran ? `<div class="dua-words" data-words-panel="${dua.id}" hidden>
+      <div class="dua-words-top">
+        <span>${esc(t(state.lang, 'dua.wordsHint'))}</span>
+        <button class="dua-words-play" type="button" data-dua="${dua.id}">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+          <span>${esc(t(state.lang, 'dua.wordsPlay'))}</span>
+        </button>
+      </div>
+      <div class="dua-words-list" lang="ar" dir="rtl">
+        ${words.map((word, index) => `<button class="dua-word" type="button" data-dua="${dua.id}" data-word="${index}" aria-label="${esc(t(state.lang, 'dua.wordAria'))} ${index + 1}">${esc(word.ar)}</button>`).join('')}
+      </div>
+      <p class="dua-words-credit">${esc(t(state.lang, 'dua.wordsCredit'))} · <a href="https://quran.com/${esc(quran.link)}" target="_blank" rel="noopener noreferrer">Quran.com</a></p>
+    </div>` : ''}
     <p class="dua-tr">${esc(dua.tr)}</p>
     ${state.lang === 'ar' ? '' : `<p class="dua-en">${esc(meaning)}</p>`}
     <div class="dua-foot">
@@ -1088,15 +1270,60 @@ function bindEvents() {
   });
 
   document.addEventListener('click', async (event) => {
+    const wordsToggle = event.target.closest('.dua-words-toggle');
+    if (wordsToggle) {
+      const card = wordsToggle.closest('.dua-card');
+      const panel = card?.querySelector('[data-words-panel]');
+      if (panel) {
+        const open = panel.hidden;
+        panel.hidden = !open;
+        wordsToggle.setAttribute('aria-expanded', String(open));
+        const label = wordsToggle.querySelector('span');
+        if (label) label.textContent = t(state.lang, open ? 'dua.wordsHide' : 'dua.words');
+      }
+      return;
+    }
+
+    const wordButton = event.target.closest('.dua-word');
+    if (wordButton) {
+      const dua = DUAS[wordButton.dataset.dua];
+      if (!dua) return;
+      playWord(dua, Number(wordButton.dataset.word), wordButton.closest('.dua-card'));
+      trackEvent('dua_words', { step: STEPS[state.step].id });
+      return;
+    }
+
+    const wordsPlay = event.target.closest('.dua-words-play');
+    if (wordsPlay) {
+      const dua = DUAS[wordsPlay.dataset.dua];
+      if (!dua) return;
+      playWords(dua, wordsPlay.closest('.dua-card'));
+      trackEvent('dua_words', { step: STEPS[state.step].id });
+      return;
+    }
+
     const play = event.target.closest('.dua-play');
     if (play) {
       const dua = DUAS[play.dataset.dua];
       if (!dua) return;
-      playMedia({
-        key: `dua:${dua.id}:${state.lang}`,
-        text: dua.ar,
-        lang: 'ar'
-      });
+      const key = `dua:${dua.id}:${state.lang}`;
+      const sources = dua.quran?.ayahs || [];
+      if (srcForKey(key)) {
+        playMedia({ key, text: dua.ar, lang: 'ar' });
+      } else if (sources.length) {
+        playAudioList({
+          key,
+          sources,
+          text: dua.ar,
+          lang: 'ar'
+        });
+      } else {
+        playMedia({
+          key,
+          text: dua.ar,
+          lang: 'ar'
+        });
+      }
       trackEvent('dua_play', { step: STEPS[state.step].id });
       return;
     }

@@ -13,6 +13,7 @@ const EVENT_NAMES = new Set([
   'step_complete',
   'journey_complete',
   'dua_play',
+  'dua_words',
   'voice_play',
   'checklist_item',
   'lang_change',
@@ -27,7 +28,7 @@ const CSP = [
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data:",
   "connect-src 'self'",
-  "media-src 'self'",
+  "media-src 'self' https://verses.quran.com https://audio.qurancdn.com",
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'self'"

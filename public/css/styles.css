@@ -1299,6 +1299,109 @@ html[lang='ar'] .dua-arabic {
   font-size: clamp(1.5rem, 2.8vw, 2rem);
 }
 
+/* ---------- Word-by-word Qur'anic audio ---------- */
+
+.dua-words {
+  margin: -4px 0 18px;
+  padding: 14px 16px 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface-2) 72%, transparent);
+}
+
+.dua-words[hidden] {
+  display: none;
+}
+
+.dua-words-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.dua-words-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--gold-2);
+  font-family: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.dua-words-play:hover,
+.dua-words-play.is-playing {
+  border-color: var(--gold);
+  background: rgba(215, 176, 106, 0.1);
+}
+
+.dua-words-play svg {
+  width: 12px;
+  height: 12px;
+}
+
+.dua-words-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  direction: rtl;
+}
+
+.dua-word {
+  padding: 2px 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: rgba(215, 176, 106, 0.06);
+  color: var(--ink);
+  font-family: var(--font-arabic);
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  line-height: 1.7;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dua-word:hover,
+.dua-word:focus-visible {
+  border-color: var(--line);
+  background: rgba(215, 176, 106, 0.12);
+  color: var(--gold-2);
+}
+
+.dua-word.is-playing {
+  border-color: var(--gold);
+  background: rgba(215, 176, 106, 0.18);
+  color: var(--gold-2);
+  box-shadow: 0 0 0 3px rgba(215, 176, 106, 0.08);
+}
+
+.dua-words-credit {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.dua-words-credit a {
+  color: var(--gold-2);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--line);
+}
+
+.dua-words-credit a:hover {
+  border-bottom-style: solid;
+}
+
 .dua-tr {
   font-size: 0.86rem;
   font-style: italic;

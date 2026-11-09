@@ -12,7 +12,7 @@ The public deployment runs on **Cloudflare Workers** with a **D1** database, whi
 
 - **Eight guided steps** — Ihram, Talbiyah, first sight of the Kaaba, Tawaf, two rak'ahs and Zamzam, Sa'i, Halq/Taqsir, completion.
 - **Authentic duas** — Arabic, transliteration, English and Urdu meanings, grading, and direct links to the source on sunnah.com.
-- **Voice guidance** — browser speech synthesis out of the box, with an optional real-audio manifest for recorded voiceovers.
+- **Voice guidance** — real word-by-word and ayah recitation for Qur'anic duas, plus browser speech synthesis for the rest and an optional real-audio manifest for custom recordings.
 - **Interactive stage** — animated SVG scenes, a 7-circuit Tawaf counter, a 7-trip Sa'i counter, progress tracking, and auto-advance.
 - **English, Arabic and Urdu** — full interface translation with RTL layout and appropriate fonts.
 - **Light and dark themes**, reduced-motion support, keyboard-friendly controls.
@@ -71,7 +71,7 @@ Country detection uses Cloudflare's `request.cf.country` / `cf-ipcountry` in pro
 
 ## Visitor analytics and privacy
 
-- No cookies, no third-party analytics or tracking scripts. Interface fonts are requested from Google Fonts; self-host them under `public/fonts/` if you need a fully third-party-free deployment.
+- No cookies, no third-party analytics or tracking scripts. Interface fonts are requested from Google Fonts, and Qur'anic audio is requested from `verses.quran.com` only when a visitor presses play. Self-host the fonts under `public/fonts/` if you need a fully third-party-free deployment.
 - A raw IP address is **never stored**. The app derives a salted SHA-256 visitor hash that includes the current day, so hashes cannot be correlated across days.
 - Stored visit fields: timestamp, day, path, random session id, daily hash, country code, device, browser, OS, language, referrer host, and screen size.
 - Events are limited to a fixed list: step views/completions, journey completion, dua/voice plays, checklist items, language/theme changes, and shares.
@@ -79,7 +79,20 @@ Country detection uses Cloudflare's `request.cf.country` / `cf-ipcountry` in pro
 - Production data lives in Cloudflare D1, inside the account that owns the Worker. Cloudflare necessarily processes request metadata to serve the site and supplies the country code; the app itself stores only the fields above. The local Node version stores the same data in `data/umrah.db`.
 - To start fresh locally, stop the server and delete `data/umrah.db*`. To clear production data, run the `DELETE` command shown under [Deploying](#deploying).
 
-## Optional recorded voiceovers
+## Audio and voiceovers
+
+### Qur'anic word-by-word audio
+
+Four duas are direct Qur'anic verses: the travel dua (43:13–14), the dua between the corners (2:201), Maqam Ibrahim (2:125), and the dua of acceptance (2:127).
+
+- **Play dua** streams the exact ayah recitation by Mishary Rashid Alafasy.
+- **Word by word** reveals the verse as tappable words; each word plays its own clip, and **Play all words** recites them in order with a moving highlight.
+
+Clips are served from Quran.com's CDN (`verses.quran.com`) and are fetched only when a visitor presses play. [QuranicAudio.com](https://quranicaudio.com/quran/5) hosts the same reciter's full-surah recordings, but it does not publish per-ayah or word-level clips — a single al-Baqarah MP3 is about 120 MB — so the app uses Quran.com's word/ayah audio and links to QuranicAudio for full surahs. No API key is needed.
+
+The 2:127 clip for the word **العليم** is missing on the CDN, so that one word uses the identical word from 2:32 (`002_032_012.mp3`). All audio URLs are listed in `public/js/data.js` under each dua's `quran` field.
+
+### Recorded voiceovers
 
 Browser speech synthesis is used whenever a recording is missing. To add real audio, put MP3/WAV/OGG files in `public/audio/` and describe them in `public/audio/manifest.json`:
 

@@ -61,8 +61,30 @@ export const DUAS = {
     ref: 'Qur’an 43:13–14',
     url: 'https://quran.com/43/13-14',
     grade: { en: 'Qur’an', ar: 'قرآن', ur: 'قرآن' },
+    quran: {
+      link: '43/13-14',
+      reciter: 'Mishary Rashid Alafasy',
+      ayahs: [
+        'https://verses.quran.com/Alafasy/mp3/043013.mp3',
+        'https://verses.quran.com/Alafasy/mp3/043014.mp3'
+      ],
+      words: [
+        { ar: 'سُبْحَانَ', src: 'https://verses.quran.com/wbw/043_013_012.mp3' },
+        { ar: 'الَّذِي', src: 'https://verses.quran.com/wbw/043_013_013.mp3' },
+        { ar: 'سَخَّرَ', src: 'https://verses.quran.com/wbw/043_013_014.mp3' },
+        { ar: 'لَنَا', src: 'https://verses.quran.com/wbw/043_013_015.mp3' },
+        { ar: 'هَذَا', src: 'https://verses.quran.com/wbw/043_013_016.mp3' },
+        { ar: 'وَمَا', src: 'https://verses.quran.com/wbw/043_013_017.mp3' },
+        { ar: 'كُنَّا', src: 'https://verses.quran.com/wbw/043_013_018.mp3' },
+        { ar: 'لَهُ', src: 'https://verses.quran.com/wbw/043_013_019.mp3' },
+        { ar: 'مُقْرِنِينَ', src: 'https://verses.quran.com/wbw/043_013_020.mp3' },
+        { ar: 'وَإِنَّا', src: 'https://verses.quran.com/wbw/043_014_001.mp3' },
+        { ar: 'إِلَى', src: 'https://verses.quran.com/wbw/043_014_002.mp3' },
+        { ar: 'رَبِّنَا', src: 'https://verses.quran.com/wbw/043_014_003.mp3' },
+        { ar: 'لَمُنْقَلِبُونَ', src: 'https://verses.quran.com/wbw/043_014_004.mp3' }
+      ]
+    },
     note: {
-      en: 'Recited when boarding a plane, bus or car on the way to Umrah.',
       ar: 'تُقال عند ركوب الطائرة أو الحافلة أو السيارة في طريق العمرة.',
       ur: 'عمرہ کے سفر میں ہوائی جہاز، بس یا گاڑی پر سوار ہوتے وقت پڑھیں۔'
     }
@@ -112,8 +134,25 @@ export const DUAS = {
     ref: 'Qur’an 2:201 · Sunan Abi Dawud 1892',
     url: 'https://sunnah.com/abudawud:1892',
     grade: { en: 'Hasan (Al-Albani)', ar: 'حسن (الألباني)', ur: 'حسن (البانی)' },
+    quran: {
+      link: '2/201',
+      reciter: 'Mishary Rashid Alafasy',
+      ayahs: ['https://verses.quran.com/Alafasy/mp3/002201.mp3'],
+      words: [
+        { ar: 'رَبَّنَا', src: 'https://verses.quran.com/wbw/002_201_004.mp3' },
+        { ar: 'آتِنَا', src: 'https://verses.quran.com/wbw/002_201_005.mp3' },
+        { ar: 'فِي', src: 'https://verses.quran.com/wbw/002_201_006.mp3' },
+        { ar: 'الدُّنْيَا', src: 'https://verses.quran.com/wbw/002_201_007.mp3' },
+        { ar: 'حَسَنَةً', src: 'https://verses.quran.com/wbw/002_201_008.mp3' },
+        { ar: 'وَفِي', src: 'https://verses.quran.com/wbw/002_201_009.mp3' },
+        { ar: 'الْآخِرَةِ', src: 'https://verses.quran.com/wbw/002_201_010.mp3' },
+        { ar: 'حَسَنَةً', src: 'https://verses.quran.com/wbw/002_201_011.mp3' },
+        { ar: 'وَقِنَا', src: 'https://verses.quran.com/wbw/002_201_012.mp3' },
+        { ar: 'عَذَابَ', src: 'https://verses.quran.com/wbw/002_201_013.mp3' },
+        { ar: 'النَّارِ', src: 'https://verses.quran.com/wbw/002_201_014.mp3' }
+      ]
+    },
     note: {
-      en: 'Recite between the Yemeni corner and the Black Stone. This is the most emphasized dua of Tawaf.',
       ar: 'تُقال بين الركن اليماني والحجر الأسود، وهي آكد دعاء في الطواف.',
       ur: 'رکن یمانی اور حجر اسود کے درمیان پڑھیں۔ یہ طواف کی سب سے اہم دعا ہے۔'
     }
@@ -129,8 +168,19 @@ export const DUAS = {
     ref: 'Qur’an 2:125 · Sahih Muslim 1218a',
     url: 'https://sunnah.com/muslim:1218a',
     grade: { en: 'Qur’an', ar: 'قرآن', ur: 'قرآن' },
+    quran: {
+      link: '2/125',
+      reciter: 'Mishary Rashid Alafasy',
+      ayahs: ['https://verses.quran.com/Alafasy/mp3/002125.mp3'],
+      words: [
+        { ar: 'وَاتَّخِذُوا', src: 'https://verses.quran.com/wbw/002_125_007.mp3' },
+        { ar: 'مِنْ', src: 'https://verses.quran.com/wbw/002_125_008.mp3' },
+        { ar: 'مَقَامِ', src: 'https://verses.quran.com/wbw/002_125_009.mp3' },
+        { ar: 'إِبْرَاهِيمَ', src: 'https://verses.quran.com/wbw/002_125_010.mp3' },
+        { ar: 'مُصَلًّى', src: 'https://verses.quran.com/wbw/002_125_011.mp3' }
+      ]
+    },
     note: {
-      en: 'Pray two rak’ahs, reciting Surah al-Kafirun in the first and Surah al-Ikhlas in the second.',
       ar: 'صلِّ ركعتين، تقرأ في الأولى سورة الكافرون وفي الثانية سورة الإخلاص.',
       ur: 'دو رکعتیں پڑھیں، پہلی میں سورۃ الکافرون اور دوسری میں سورۃ الاخلاص۔'
     }
@@ -190,13 +240,29 @@ export const DUAS = {
   acceptance: {
     id: 'acceptance',
     label: { en: 'Dua for acceptance', ar: 'دعاء القبول', ur: 'قبولیت کی دعا' },
-    ar: 'اللَّهُمَّ تَقَبَّلْ مِنَّا، إِنَّكَ أَنْتَ السَّمِيعُ الْعَلِيمُ',
-    tr: 'Allāhumma taqabbal minnā, innaka anta s-samīʿu l-ʿalīm.',
-    en: 'O Allah, accept this from us. Indeed, You are the All-Hearing, the All-Knowing.',
-    ur: 'اے اللہ! ہم سے قبول فرما، بیشک تو سب کچھ سننے والا اور جاننے والا ہے۔',
+    ar: 'رَبَّنَا تَقَبَّلْ مِنَّا، إِنَّكَ أَنْتَ السَّمِيعُ الْعَلِيمُ',
+    tr: 'Rabbanā taqabbal minnā, innaka anta s-samīʿu l-ʿalīm.',
+    en: 'Our Lord, accept this from us. Indeed, You are the All-Hearing, the All-Knowing.',
+    ur: 'اے ہمارے رب! ہم سے قبول فرما، بیشک تو سب کچھ سننے والا اور جاننے والا ہے۔',
     ref: 'Qur’an 2:127',
     url: 'https://quran.com/2/127',
     grade: { en: 'Qur’an', ar: 'قرآن', ur: 'قرآن' },
+    quran: {
+      link: '2/127',
+      reciter: 'Mishary Rashid Alafasy',
+      ayahs: ['https://verses.quran.com/Alafasy/mp3/002127.mp3'],
+      words: [
+        { ar: 'رَبَّنَا', src: 'https://verses.quran.com/wbw/002_127_008.mp3' },
+        { ar: 'تَقَبَّلْ', src: 'https://verses.quran.com/wbw/002_127_009.mp3' },
+        { ar: 'مِنَّا', src: 'https://verses.quran.com/wbw/002_127_010.mp3' },
+        { ar: 'إِنَّكَ', src: 'https://verses.quran.com/wbw/002_127_012.mp3' },
+        { ar: 'أَنْتَ', src: 'https://verses.quran.com/wbw/002_127_013.mp3' },
+        { ar: 'السَّمِيعُ', src: 'https://verses.quran.com/wbw/002_127_014.mp3' },
+        // The 2:127 clip for this word is missing on the CDN, so use the
+        // identical word (العليم) from 2:32 instead.
+        { ar: 'الْعَلِيمُ', src: 'https://verses.quran.com/wbw/002_032_012.mp3' }
+      ]
+    },
     note: {
       en: 'The words of Ibrahim and Isma‘il when they raised the foundations of the Ka‘bah. End your Umrah with gratitude and this supplication.',
       ar: 'دعاء إبراهيم وإسماعيل حين رفعا قواعد البيت. اختم عمرتك بالحمد وهذا الدعاء.',
@@ -727,5 +793,7 @@ export const SOURCES = [
   { title: { en: 'The complete description of the rites', ar: 'صفة المناسك كاملة', ur: 'ارکان کی مکمل تفصیل' }, ref: 'Sahih Muslim 1218a', url: 'https://sunnah.com/muslim:1218a' },
   { title: { en: 'Sa‘i between Safa and Marwa', ar: 'السعي بين الصفا والمروة', ur: 'صفا و مروہ کی سعی' }, ref: 'Sahih al-Bukhari 1647', url: 'https://sunnah.com/bukhari:1647' },
   { title: { en: 'Shaving and trimming the hair', ar: 'الحلق والتقصير', ur: 'حلق اور تقصیر' }, ref: 'Sahih al-Bukhari 1727', url: 'https://sunnah.com/bukhari:1727' },
-  { title: { en: 'The water of Zamzam', ar: 'ماء زمزم', ur: 'زمزم کا پانی' }, ref: 'Sunan Ibn Majah 3062 (Hasan)', url: 'https://sunnah.com/ibnmajah:3062' }
+  { title: { en: 'The water of Zamzam', ar: 'ماء زمزم', ur: 'زمزم کا پانی' }, ref: 'Sunan Ibn Majah 3062 (Hasan)', url: 'https://sunnah.com/ibnmajah:3062' },
+  { title: { en: 'Qur’an recitations', ar: 'تلاوات القرآن', ur: 'قرآن کی تلاوت' }, ref: 'QuranicAudio · Mishary Rashid Alafasy', url: 'https://quranicaudio.com/quran/5' },
+  { title: { en: 'Word-by-word Qur’an audio', ar: 'تلاوة القرآن كلمة بكلمة', ur: 'قرآن کا لفظ بلفظ تلاوت' }, ref: 'Quran.com', url: 'https://quran.com/' }
 ];
