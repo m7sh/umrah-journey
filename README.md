@@ -4,6 +4,7 @@ A free, interactive, voice-guided Umrah walkthrough for the Ummah. Eight rites, 
 
 **Live site:** <https://umrah-journey.memusharaf777.workers.dev>
 **Dashboard:** <https://umrah-journey.memusharaf777.workers.dev/admin>
+**Source:** <https://github.com/m7sh/umrah-journey>
 
 The public deployment runs on **Cloudflare Workers** with a **D1** database, which is free, always on, and needs no card. The same code also runs locally with zero npm dependencies through a small Node HTTP server and the built-in `node:sqlite` module; the front end is vanilla HTML/CSS/ES modules in both cases.
 
