@@ -109,6 +109,9 @@ export const UI = {
 
     'footer.privacy': 'Privacy first: visits are counted anonymously. No accounts, no ads, no selling of data.',
     'footer.built': 'Built for the Ummah, with love and humility.',
+    'footer.credit': 'Made with love for the Ummah',
+    'footer.github': 'Reach out on GitHub',
+    'footer.visits': '{total} visits · {today} today',
     'footer.rights': 'A free resource. Share it with a pilgrim.',
     'footer.share': 'Share this guide',
     'footer.copied': 'Link copied',
@@ -236,6 +239,9 @@ export const UI = {
 
     'footer.privacy': 'الخصوصية أولاً: تُعد الزيارات بلا أسماء. لا حسابات ولا إعلانات ولا بيع للبيانات.',
     'footer.built': 'صُنع للأمة، بمحبة وتواضع.',
+    'footer.credit': 'صُنع بحبٍّ للأمة',
+    'footer.github': 'تواصل معي على GitHub',
+    'footer.visits': '{total} زيارة · {today} اليوم',
     'footer.rights': 'مورد مجاني. شاركه مع حاج.',
     'footer.share': 'شارك الدليل',
     'footer.copied': 'تم نسخ الرابط',
@@ -363,6 +369,9 @@ export const UI = {
 
     'footer.privacy': 'پرائیویسی پہلے: دورے بغیر نام کے شمار ہوتے ہیں۔ نہ اکاؤنٹ، نہ اشتہار، نہ ڈیٹا کی فروخت۔',
     'footer.built': 'امت کے لیے، محبت اور عاجزی کے ساتھ۔',
+    'footer.credit': 'امت کے لیے محبت سے بنایا گیا',
+    'footer.github': 'GitHub پر رابطہ کریں',
+    'footer.visits': '{total} دورے · آج {today}',
     'footer.rights': 'ایک مفت تحفہ۔ کسی زائر کے ساتھ شیئر کریں۔',
     'footer.share': 'یہ رہنمائی شیئر کریں',
     'footer.copied': 'لنک نقل ہو گیا',

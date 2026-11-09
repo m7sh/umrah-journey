@@ -121,16 +121,29 @@ function trackVisit() {
   });
 }
 
+let latestCounter = null;
+
+function renderFooterVisits() {
+  if (!latestCounter) return;
+  const footer = $('#footerVisits');
+  if (footer) {
+    const total = Number(latestCounter.total ?? 0).toLocaleString(state.lang);
+    const today = Number(latestCounter.today ?? 0).toLocaleString(state.lang);
+    const tpl = t(state.lang, 'footer.visits');
+    footer.textContent = tpl.replace('{total}', total).replace('{today}', today);
+  }
+}
+
 function loadCounter() {
   fetch('/api/counter', { cache: 'no-store' })
     .then((r) => (r.ok ? r.json() : null))
     .then((data) => {
       if (!data) return;
+      latestCounter = data;
       countUp($('#statVisitors'), data.total);
       const countries = $('#statCountries');
       if (countries) countries.textContent = String(data.countries ?? 0).padStart(2, '0');
-      const footer = $('#footerVisits');
-      if (footer) footer.textContent = `${data.total.toLocaleString()} visits · ${data.today.toLocaleString()} today`;
+      renderFooterVisits();
     })
     .catch(() => {});
 }
@@ -998,6 +1011,7 @@ function applyStatic() {
   });
   const search = $('#duaSearch');
   if (search) search.setAttribute('aria-label', t(state.lang, 'duas.search'));
+  renderFooterVisits();
 }
 
 function setLang(lang) {
