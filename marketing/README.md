@@ -1,6 +1,8 @@
 # Social posters
 
-Ready-to-post artwork for **Umrah Journey** — https://umrah-journey.umrahguide.workers.dev
+Ready-to-post artwork for **Umrah & Hajj Journey** — https://umrah-journey.umrahguide.workers.dev
+
+The current artwork is built around the Umrah guide; the captions below also introduce the Hajj guide that now lives on the same site.
 
 | File | Size | Use |
 | --- | --- | --- |
@@ -47,6 +49,8 @@ npx --yes qrcode -t svg -e H -q 1 -l "#f6f1e3" -d "#0a1a14" \
 >
 > From the first intention at the miqat to the final haircut: 8 guided rites, 10 authentic duas with references, and word-by-word Qur’anic recitation.
 >
+> The same guide now walks you through **Hajj** too — all 11 rites across the five days, with Tamattu‘, Ifrad and Qiran side by side.
+>
 > English · العربية · اردو
 > No sign-up. Your progress stays on your device.
 >
@@ -57,6 +61,8 @@ npx --yes qrcode -t svg -e H -q 1 -l "#f6f1e3" -d "#0a1a14" \
 > العمرة خطوة بخطوة — مجانًا وبلغتك. 🕋
 >
 > من أول نية عند الميقات إلى الحلق: ٨ مناسك، و١٠ أدعية موثقة، وتلاوة قرآنية كلمة بكلمة.
+>
+> والدليل نفسه يمشي بك في **الحج** أيضاً — أحد عشر منسكاً في خمسة أيام، مع التمتع والإفراد والقران جنباً إلى جنب.
 >
 > الإنجليزية · العربية · اردو
 > بدون تسجيل، ويُحفظ تقدمك على جهازك.
@@ -69,6 +75,8 @@ npx --yes qrcode -t svg -e H -q 1 -l "#f6f1e3" -d "#0a1a14" \
 >
 > میقات پر پہلی نیت سے لے کر حلق تک: ۸ مناسک، ۱۰ مستند دعائیں، اور قرآن کی لفظ بلفظ تلاوت۔
 >
+> یہی گائیڈ اب **حج** میں بھی رہنمائی کرتی ہے — پانچ دن کے گیارہ اعمال، تمتع، افراد اور قران کے ساتھ۔
+>
 > English · العربية · اردو
 > کوئی سائن اپ نہیں، پیش رفت آپ کے ڈیوائس پر محفوظ۔
 >
@@ -76,7 +84,7 @@ npx --yes qrcode -t svg -e H -q 1 -l "#f6f1e3" -d "#0a1a14" \
 
 ### Hashtags
 
-`#Umrah #UmrahGuide #UmrahJourney #Makkah #MasjidAlHaram #Islam #Muslim #Dua #Quran #Sunnah #Ummah`
+`#Umrah #Hajj #UmrahGuide #HajjGuide #Makkah #MasjidAlHaram #Mina #Arafah #Islam #Muslim #Dua #Quran #Sunnah #Ummah`
 
 ## Posting notes
 
