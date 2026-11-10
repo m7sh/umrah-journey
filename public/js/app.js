@@ -1,4 +1,14 @@
 import { META, STEPS, DUAS, PILLARS, CHECKLIST, PROHIBITIONS, FAQ, SOURCES } from './data.js';
+import {
+  HAJJ_META,
+  HAJJ_TYPES,
+  HAJJ_STEPS,
+  HAJJ_DUAS,
+  HAJJ_CHECKLIST,
+  HAJJ_FAQ,
+  HAJJ_PILLARS,
+  HAJJ_SOURCES
+} from './hajj-data.js';
 import { LANGS, t, dirFor, pick } from './i18n.js';
 import { sceneFor } from './scenes.js';
 
@@ -40,8 +50,12 @@ function write(key, value) {
 const STORAGE = {
   lang: 'umrah.lang',
   theme: 'umrah.theme',
+  journey: 'umrah.journey',
+  hajjType: 'umrah.hajjType',
   step: 'umrah.step',
   done: 'umrah.done',
+  hajjStep: 'umrah.hajj.step',
+  hajjDone: 'umrah.hajj.done',
   checks: 'umrah.checks',
   voice: 'umrah.voice',
   auto: 'umrah.auto',
@@ -50,27 +64,76 @@ const STORAGE = {
 
 const browserLang = (navigator.language || 'en').slice(0, 2).toLowerCase();
 const initialLang = read(STORAGE.lang, ['en', 'ar', 'ur'].includes(browserLang) ? browserLang : 'en');
+const initialJourney = read(STORAGE.journey, 'umrah') === 'hajj' ? 'hajj' : 'umrah';
+const storedType = read(STORAGE.hajjType, 'tamattu');
+const initialHajjType = HAJJ_TYPES.some((type) => type.id === storedType) ? storedType : 'tamattu';
+const initialStepKey = initialJourney === 'hajj' ? STORAGE.hajjStep : STORAGE.step;
+const initialDoneKey = initialJourney === 'hajj' ? STORAGE.hajjDone : STORAGE.done;
+const initialStepCount = initialJourney === 'hajj' ? HAJJ_STEPS.length : STEPS.length;
+const initialDone = read(initialDoneKey, []);
 
 const state = {
   lang: LANGS.some((l) => l.code === initialLang) ? initialLang : 'en',
   theme: read(STORAGE.theme, window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'),
-  step: clamp(Number(read(STORAGE.step, 0)) || 0, 0, STEPS.length - 1),
-  done: new Set(Array.isArray(read(STORAGE.done, [])) ? read(STORAGE.done, []) : []),
+  journey: initialJourney,
+  hajjType: initialHajjType,
+  step: clamp(Number(read(initialStepKey, 0)) || 0, 0, initialStepCount - 1),
+  done: new Set(Array.isArray(initialDone) ? initialDone : []),
   checks: new Set(Array.isArray(read(STORAGE.checks, [])) ? read(STORAGE.checks, []) : []),
   voice: read(STORAGE.voice, true) !== false,
   auto: read(STORAGE.auto, false) === true,
-  counters: Object.assign({ tawaf: 0, sai: 0 }, read(STORAGE.counters, {})),
+  counters: (() => {
+    const raw = read(STORAGE.counters, {});
+    const out = {};
+    if (raw && typeof raw === 'object') {
+      for (const [key, value] of Object.entries(raw)) {
+        const n = Number(value);
+        if (Number.isFinite(n)) out[key] = clamp(Math.round(n), 0, 7);
+      }
+    }
+    if (out.tawaf !== undefined) {
+      out['tawaf:tawaf'] = out.tawaf;
+      delete out.tawaf;
+    }
+    if (out.sai !== undefined) {
+      out['sai:sai'] = out.sai;
+      delete out.sai;
+    }
+    return out;
+  })(),
   duas: [],
   query: '',
   journeyCompleteSent: false,
   viewed: new Set()
 };
 
+/* Hajj shares one guide across Tamattu‘, Ifrad and Qiran. Each step may
+   override text, actions or tips for the selected type. */
+function stepForType(step, type = state.hajjType) {
+  const variant = step.variants?.[type];
+  if (!variant) return step;
+  return { ...step, ...variant, id: step.id, num: step.num, scene: step.scene, duas: variant.duas || step.duas };
+}
+
+function activeSteps() {
+  if (state.journey === 'hajj') return HAJJ_STEPS.map((step) => stepForType(step));
+  return STEPS;
+}
+
+const activeMeta = () => (state.journey === 'hajj' ? HAJJ_META : META);
+const activeChecklist = () => (state.journey === 'hajj' ? HAJJ_CHECKLIST : CHECKLIST);
+const activePillars = () => (state.journey === 'hajj' ? HAJJ_PILLARS : PILLARS);
+const activeFaq = () => (state.journey === 'hajj' ? [...HAJJ_FAQ, ...FAQ] : FAQ);
+const activeSources = () => (state.journey === 'hajj' ? [...HAJJ_SOURCES, ...SOURCES] : SOURCES);
+const ALL_DUAS = { ...DUAS, ...HAJJ_DUAS };
+
 function persist() {
   write(STORAGE.lang, state.lang);
   write(STORAGE.theme, state.theme);
-  write(STORAGE.step, state.step);
-  write(STORAGE.done, [...state.done]);
+  write(STORAGE.journey, state.journey);
+  write(STORAGE.hajjType, state.hajjType);
+  write(state.journey === 'hajj' ? STORAGE.hajjStep : STORAGE.step, state.step);
+  write(state.journey === 'hajj' ? STORAGE.hajjDone : STORAGE.done, [...state.done]);
   write(STORAGE.checks, [...state.checks]);
   write(STORAGE.voice, state.voice);
   write(STORAGE.auto, state.auto);
@@ -528,7 +591,7 @@ function playWords(dua, card) {
 }
 
 function updatePlayUI() {
-  const step = STEPS[state.step];
+  const step = activeSteps()[state.step];
   const narrationKey = `step:${step.id}:${state.lang}`;
   const btn = $('#playNarration');
   if (btn) {
@@ -598,9 +661,84 @@ function stepTitle(step) {
   return pick(step.title, state.lang);
 }
 
+function renderJourneyChrome() {
+  const isHajj = state.journey === 'hajj';
+
+  $$('#journeySwitch [data-journey]').forEach((button) => {
+    const on = button.dataset.journey === state.journey;
+    button.classList.toggle('is-active', on);
+    button.setAttribute('aria-pressed', String(on));
+  });
+
+  const panel = $('#hajjPanel');
+  if (panel) panel.hidden = !isHajj;
+
+  const title = $('#journeyTitle');
+  if (title) title.textContent = t(state.lang, isHajj ? 'journey.hajjTitle' : 'journey.title');
+  const subtitle = $('#journeySubtitle');
+  if (subtitle) subtitle.textContent = t(state.lang, isHajj ? 'journey.hajjSubtitle' : 'journey.subtitle');
+
+  const rail = $('#stepRail');
+  if (rail) rail.setAttribute('aria-label', t(state.lang, isHajj ? 'journey.hajjRail' : 'journey.umrahRail'));
+
+  const compare = $('#hajjCompareToggle span');
+  const comparePanel = $('#hajjCompare');
+  const compareOpen = comparePanel ? !comparePanel.hidden : false;
+  if (compare) compare.textContent = t(state.lang, compareOpen ? 'hajj.compareHide' : 'hajj.compareShow');
+  const compareToggle = $('#hajjCompareToggle');
+  if (compareToggle) compareToggle.setAttribute('aria-expanded', String(compareOpen));
+
+  const pillarsTitle = $('#pillarsTitle');
+  if (pillarsTitle) pillarsTitle.textContent = t(state.lang, isHajj ? 'prepare.pillarsHajj' : 'prepare.pillars');
+
+  if (isHajj) renderHajjTypes();
+}
+
+function renderHajjTypes() {
+  const host = $('#hajjTypes');
+  if (!host) return;
+
+  host.innerHTML = HAJJ_TYPES.map((type) => {
+    const on = type.id === state.hajjType;
+    return `<button class="hajj-type${on ? ' is-active' : ''}" type="button"
+      data-hajj-type="${type.id}" aria-pressed="${on}">
+      <span class="hajj-type-top">
+        <span class="hajj-type-ar" lang="ar" dir="rtl">${esc(type.arabic)}</span>
+        <span class="hajj-type-badge">${esc(pick(type.badge, state.lang))}</span>
+      </span>
+      <span class="hajj-type-name">${esc(pick(type.label, state.lang))}</span>
+      <span class="hajj-type-tag">${esc(pick(type.tagline, state.lang))}</span>
+      <span class="hajj-type-who">${esc(pick(type.who, state.lang))}</span>
+      <span class="hajj-type-sac">${esc(pick(type.sacrifice, state.lang))}</span>
+      <span class="hajj-type-points">${type.points
+        .map((point) => `<span>${esc(pick(point, state.lang))}</span>`)
+        .join('')}</span>
+    </button>`;
+  }).join('');
+
+  renderHajjCompare();
+}
+
+function renderHajjCompare() {
+  const host = $('#hajjCompare');
+  if (!host) return;
+  host.innerHTML = `<div class="hajj-compare-grid">
+    <p class="hajj-compare-title" data-i18n="hajj.compareTitle">${esc(t(state.lang, 'hajj.compareTitle'))}</p>
+    ${HAJJ_TYPES.map((type) => `<div class="hajj-compare-col">
+      <h4 lang="ar" dir="rtl">${esc(type.arabic)}</h4>
+      <p class="hajj-compare-tag">${esc(pick(type.tagline, state.lang))}</p>
+      <ul>${type.points.map((point) => `<li>${esc(pick(point, state.lang))}</li>`).join('')}</ul>
+      <p class="hajj-compare-sac">${esc(pick(type.sacrifice, state.lang))}</p>
+    </div>`).join('')}
+  </div>`;
+}
+
 function renderHero() {
-  $('#heroTitle').textContent = pick(META.heroTitle, state.lang);
-  $('#heroLead').textContent = pick(META.heroLead, state.lang);
+  $('#heroTitle').textContent = pick(activeMeta().heroTitle, state.lang);
+  $('#heroLead').textContent = pick(activeMeta().heroLead, state.lang);
+
+  const watermark = $('#heroArabic');
+  if (watermark) watermark.textContent = state.journey === 'hajj' ? HAJJ_META.heroArabic : 'العمرة';
 
   const startSpan = $('#heroStart span');
   if (startSpan) {
@@ -612,7 +750,9 @@ function renderHero() {
 function renderRail() {
   const rail = $('#stepRail');
   if (!rail) return;
-  rail.innerHTML = STEPS.map((step, index) => {
+  const steps = activeSteps();
+  rail.style.setProperty('--rail-count', String(steps.length));
+  rail.innerHTML = steps.map((step, index) => {
     const active = index === state.step;
     const done = state.done.has(step.id);
     return `<button class="rail-btn${active ? ' is-active' : ''}${done ? ' is-done' : ''}"
@@ -727,15 +867,16 @@ function duasHTML(step) {
       <div class="dua-card"><p class="dua-en">${esc(t(state.lang, 'dua.none'))}</p></div>`;
   }
   return `<p class="stage-subhead">${t(state.lang, 'journey.duas')}</p>
-    <div class="dua-stack">${ids.map((id) => (DUAS[id] ? duaCard(DUAS[id]) : '')).join('')}</div>`;
+    <div class="dua-stack">${ids.map((id) => (ALL_DUAS[id] ? duaCard(ALL_DUAS[id]) : '')).join('')}</div>`;
 }
 
-function counterHTML(type) {
-  const count = state.counters[type] || 0;
+function counterHTML(type, stepId) {
+  const key = `${stepId}:${type}`;
+  const count = state.counters[key] || 0;
   const isTawaf = type === 'tawaf';
   const label = t(state.lang, isTawaf ? 'tawaf.circuit' : 'sai.trip');
   const status = counterStatus(type, count);
-  return `<div class="counter" data-counter="${type}">
+  return `<div class="counter" data-counter="${type}" data-counter-key="${esc(key)}" data-counter-step="${esc(stepId)}">
     <div class="counter-ring">
       <svg viewBox="0 0 116 116" aria-hidden="true">
         <circle class="ring-bg" cx="58" cy="58" r="50"/>
@@ -766,11 +907,12 @@ function counterStatus(type, count) {
 }
 
 function renderStage() {
-  const step = STEPS[state.step];
+  const steps = activeSteps();
+  const step = steps[state.step];
   if (!step) return;
 
   $('#stageStepNum').textContent = String(step.num).padStart(2, '0');
-  $('#stageStepOf').textContent = `${t(state.lang, 'journey.step')} ${step.num} ${t(state.lang, 'journey.of')} ${STEPS.length}`;
+  $('#stageStepOf').textContent = `${t(state.lang, 'journey.step')} ${step.num} ${t(state.lang, 'journey.of')} ${steps.length}`;
   $('#stageMinutes').textContent = `${step.minutes} ${t(state.lang, 'journey.min')}`;
   $('#stageScene').innerHTML = sceneFor(step.scene);
   $('#stageKicker').textContent = pick(step.kicker, state.lang);
@@ -779,7 +921,12 @@ function renderStage() {
   $('#stageActions').innerHTML = actionsHTML(step);
   $('#stageTips').innerHTML = tipsHTML(step);
   $('#stageDuas').innerHTML = duasHTML(step);
-  $('#counterHost').innerHTML = step.interactive ? counterHTML(step.interactive) : '';
+  const interactive = Array.isArray(step.interactive)
+    ? step.interactive
+    : step.interactive
+      ? [step.interactive]
+      : [];
+  $('#counterHost').innerHTML = interactive.map((type) => counterHTML(type, step.id)).join('');
 
   const done = state.done.has(step.id);
   const doneState = $('#stageDoneState');
@@ -792,7 +939,7 @@ function renderStage() {
 
   const nextBtn = $('#nextStep span');
   if (nextBtn) {
-    nextBtn.textContent = t(state.lang, state.step === STEPS.length - 1 ? 'journey.finish' : 'journey.next');
+    nextBtn.textContent = t(state.lang, state.step === steps.length - 1 ? 'journey.finish' : 'journey.next');
   }
 
   const prevBtn = $('#prevStep');
@@ -803,7 +950,7 @@ function renderStage() {
 }
 
 function renderDuas() {
-  state.duas = Object.values(DUAS);
+  state.duas = Object.values(ALL_DUAS);
   const library = $('#duaLibrary');
   if (!library) return;
   library.innerHTML = state.duas.map(duaCard).join('');
@@ -827,7 +974,7 @@ function applyDuaFilter() {
 function renderPillars() {
   const host = $('#pillars');
   if (!host) return;
-  host.innerHTML = PILLARS.map((pillar, index) => `
+  host.innerHTML = activePillars().map((pillar, index) => `
     <article class="pillar reveal" data-delay="${index % 4}">
       <span class="pillar-num">0${index + 1}</span>
       <h3>${esc(pick(pillar.title, state.lang))}</h3>
@@ -837,13 +984,13 @@ function renderPillars() {
 }
 
 function totalCheckItems() {
-  return CHECKLIST.reduce((sum, group) => sum + group.items.length, 0);
+  return activeChecklist().reduce((sum, group) => sum + group.items.length, 0);
 }
 
 function renderChecklist() {
   const host = $('#checklist');
   if (!host) return;
-  host.innerHTML = CHECKLIST.map((group) => `
+  host.innerHTML = activeChecklist().map((group) => `
     <div class="check-group reveal">
       <h3>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -863,7 +1010,7 @@ function renderChecklist() {
 
 function updateCheckProgress() {
   const total = totalCheckItems();
-  const done = CHECKLIST.reduce(
+  const done = activeChecklist().reduce(
     (sum, group) => sum + group.items.filter((item) => state.checks.has(item.id)).length,
     0
   );
@@ -887,7 +1034,7 @@ function renderProhibitions() {
 function renderFaq() {
   const host = $('#faqList');
   if (!host) return;
-  host.innerHTML = FAQ.map((item) => `
+  host.innerHTML = activeFaq().map((item) => `
     <details class="faq-item">
       <summary>${esc(pick(item.q, state.lang))}</summary>
       <p class="faq-answer">${esc(pick(item.a, state.lang))}</p>
@@ -897,7 +1044,7 @@ function renderFaq() {
 function renderSources() {
   const host = $('#sourcesGrid');
   if (!host) return;
-  host.innerHTML = SOURCES.map((source) => `
+  host.innerHTML = activeSources().map((source) => `
     <a class="source-card" href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">
       <span class="source-title">${esc(pick(source.title, state.lang))}</span>
       <span class="source-ref">
@@ -910,6 +1057,7 @@ function renderSources() {
 }
 
 function renderAll() {
+  renderJourneyChrome();
   renderHero();
   renderRail();
   renderStage();
@@ -927,18 +1075,23 @@ function renderAll() {
 /* ------------------------------------------------------------------ */
 
 function updateProgress() {
+  const steps = activeSteps();
   const done = state.done.size;
-  const pct = (done / STEPS.length) * 100;
+  const pct = (done / steps.length) * 100;
   const fill = $('#journeyProgress');
   if (fill) fill.style.width = `${pct}%`;
   const text = $('#journeyProgressText');
-  if (text) text.textContent = `${done} / ${STEPS.length}`;
+  if (text) text.textContent = `${done} / ${steps.length}`;
   const bar = $('#journeyProgressBar');
-  if (bar) bar.setAttribute('aria-valuenow', String(done));
+  if (bar) {
+    bar.setAttribute('aria-valuenow', String(done));
+    bar.setAttribute('aria-valuemax', String(steps.length));
+  }
 }
 
 function setStep(index, { scroll = false, silent = false } = {}) {
-  const next = clamp(index, 0, STEPS.length - 1);
+  const steps = activeSteps();
+  const next = clamp(index, 0, steps.length - 1);
   if (next !== state.step) {
     stopMedia();
   }
@@ -948,7 +1101,7 @@ function setStep(index, { scroll = false, silent = false } = {}) {
   renderStage();
 
   if (!silent) {
-    const step = STEPS[next];
+    const step = steps[next];
     if (!state.viewed.has(step.id)) {
       state.viewed.add(step.id);
       trackEvent('step_view', { step: step.id });
@@ -970,14 +1123,15 @@ function setStep(index, { scroll = false, silent = false } = {}) {
 }
 
 function markStepDone(stepId) {
+  const steps = activeSteps();
   if (state.done.has(stepId)) return;
   state.done.add(stepId);
   persist();
   trackEvent('step_complete', { step: stepId });
-  if (state.done.size === STEPS.length && !state.journeyCompleteSent) {
+  if (state.done.size === steps.length && !state.journeyCompleteSent) {
     state.journeyCompleteSent = true;
     trackEvent('journey_complete');
-    showToast(t(state.lang, 'journey.done'));
+    showToast(t(state.lang, state.journey === 'hajj' ? 'journey.doneHajj' : 'journey.done'));
   }
   renderRail();
   renderStage();
@@ -985,13 +1139,53 @@ function markStepDone(stepId) {
 }
 
 function nextStep() {
-  const step = STEPS[state.step];
+  const steps = activeSteps();
+  const step = steps[state.step];
   markStepDone(step.id);
-  if (state.step < STEPS.length - 1) {
+  if (state.step < steps.length - 1) {
     setStep(state.step + 1, { scroll: true });
   } else {
-    showToast(t(state.lang, 'journey.celebrate'));
+    showToast(t(state.lang, state.journey === 'hajj' ? 'journey.celebrateHajj' : 'journey.celebrate'));
   }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Journey switching (Umrah / Hajj)                                   */
+/* ------------------------------------------------------------------ */
+
+function loadJourneyState(journey) {
+  const isHajj = journey === 'hajj';
+  const stepKey = isHajj ? STORAGE.hajjStep : STORAGE.step;
+  const doneKey = isHajj ? STORAGE.hajjDone : STORAGE.done;
+  const count = isHajj ? HAJJ_STEPS.length : STEPS.length;
+  state.journey = journey;
+  state.step = clamp(Number(read(stepKey, 0)) || 0, 0, count - 1);
+  const stored = read(doneKey, []);
+  state.done = new Set(Array.isArray(stored) ? stored : []);
+}
+
+function switchJourney(journey) {
+  if (journey !== 'umrah' && journey !== 'hajj') return;
+  if (journey === state.journey) return;
+  persist();
+  stopMedia();
+  state.journeyCompleteSent = false;
+  state.viewed = new Set();
+  loadJourneyState(journey);
+  persist();
+  renderAll();
+  setStep(state.step, { silent: true });
+  trackEvent('journey_switch');
+}
+
+function setHajjType(type) {
+  if (!HAJJ_TYPES.some((item) => item.id === type) || type === state.hajjType) return;
+  stopMedia();
+  state.hajjType = type;
+  persist();
+  renderAll();
+  setStep(state.step, { silent: true });
+  trackEvent('hajj_type');
 }
 
 /* ------------------------------------------------------------------ */
@@ -1011,6 +1205,7 @@ function applyStatic() {
   });
   const search = $('#duaSearch');
   if (search) search.setAttribute('aria-label', t(state.lang, 'duas.search'));
+  renderJourneyChrome();
   renderFooterVisits();
 }
 
@@ -1221,6 +1416,27 @@ function bindEvents() {
   $('#autoToggleInline')?.addEventListener('click', toggleAuto);
   $('#shareBtn')?.addEventListener('click', shareGuide);
 
+  $('#journeySwitch')?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-journey]');
+    if (button) switchJourney(button.dataset.journey);
+  });
+
+  $('#hajjTypes')?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-hajj-type]');
+    if (button) setHajjType(button.dataset.hajjType);
+  });
+
+  $('#hajjCompareToggle')?.addEventListener('click', () => {
+    const panel = $('#hajjCompare');
+    const button = $('#hajjCompareToggle');
+    if (!panel) return;
+    const open = panel.hidden;
+    panel.hidden = !open;
+    button?.setAttribute('aria-expanded', String(open));
+    const label = button?.querySelector('span');
+    if (label) label.textContent = t(state.lang, open ? 'hajj.compareHide' : 'hajj.compareShow');
+  });
+
   $('#stepRail')?.addEventListener('click', (event) => {
     const button = event.target.closest('[data-step]');
     if (!button) return;
@@ -1240,7 +1456,7 @@ function bindEvents() {
 
   $('#prevStep')?.addEventListener('click', () => setStep(state.step - 1, { scroll: true }));
   $('#nextStep')?.addEventListener('click', nextStep);
-  $('#markComplete')?.addEventListener('click', () => markStepDone(STEPS[state.step].id));
+  $('#markComplete')?.addEventListener('click', () => markStepDone(activeSteps()[state.step].id));
 
   $('#resetJourney')?.addEventListener('click', () => {
     const message = state.lang === 'ar'
@@ -1250,7 +1466,10 @@ function bindEvents() {
         : 'Start the journey over? Your step progress will be cleared.';
     if (!window.confirm(message)) return;
     state.done.clear();
-    state.counters = { tawaf: 0, sai: 0 };
+    activeSteps().forEach((step) => {
+      delete state.counters[`${step.id}:tawaf`];
+      delete state.counters[`${step.id}:sai`];
+    });
     state.step = 0;
     state.journeyCompleteSent = false;
     persist();
@@ -1260,7 +1479,8 @@ function bindEvents() {
   });
 
   $('#playNarration')?.addEventListener('click', () => {
-    const step = STEPS[state.step];
+    const steps = activeSteps();
+    const step = steps[state.step];
     const key = `step:${step.id}:${state.lang}`;
     playMedia({
       key,
@@ -1269,12 +1489,12 @@ function bindEvents() {
       onend: () => {
         if (state.auto) {
           window.setTimeout(() => {
-            if (state.step < STEPS.length - 1) {
+            if (state.step < steps.length - 1) {
               markStepDone(step.id);
               setStep(state.step + 1, { scroll: true });
             } else {
               markStepDone(step.id);
-              showToast(t(state.lang, 'journey.celebrate'));
+              showToast(t(state.lang, state.journey === 'hajj' ? 'journey.celebrateHajj' : 'journey.celebrate'));
             }
           }, 800);
         }
@@ -1300,25 +1520,25 @@ function bindEvents() {
 
     const wordButton = event.target.closest('.dua-word');
     if (wordButton) {
-      const dua = DUAS[wordButton.dataset.dua];
+      const dua = ALL_DUAS[wordButton.dataset.dua];
       if (!dua) return;
       playWord(dua, Number(wordButton.dataset.word), wordButton.closest('.dua-card'));
-      trackEvent('dua_words', { step: STEPS[state.step].id });
+      trackEvent('dua_words', { step: activeSteps()[state.step].id });
       return;
     }
 
     const wordsPlay = event.target.closest('.dua-words-play');
     if (wordsPlay) {
-      const dua = DUAS[wordsPlay.dataset.dua];
+      const dua = ALL_DUAS[wordsPlay.dataset.dua];
       if (!dua) return;
       playWords(dua, wordsPlay.closest('.dua-card'));
-      trackEvent('dua_words', { step: STEPS[state.step].id });
+      trackEvent('dua_words', { step: activeSteps()[state.step].id });
       return;
     }
 
     const play = event.target.closest('.dua-play');
     if (play) {
-      const dua = DUAS[play.dataset.dua];
+      const dua = ALL_DUAS[play.dataset.dua];
       if (!dua) return;
       const key = `dua:${dua.id}:${state.lang}`;
       const sources = dua.quran?.ayahs || [];
@@ -1338,13 +1558,13 @@ function bindEvents() {
           lang: 'ar'
         });
       }
-      trackEvent('dua_play', { step: STEPS[state.step].id });
+      trackEvent('dua_play', { step: activeSteps()[state.step].id });
       return;
     }
 
     const copy = event.target.closest('.dua-copy');
     if (copy) {
-      const dua = DUAS[copy.dataset.dua];
+      const dua = ALL_DUAS[copy.dataset.dua];
       if (!dua) return;
       const ok = await copyText(dua.ar);
       showToast(t(state.lang, ok ? 'dua.copied' : 'dua.copyFailed'));
@@ -1366,18 +1586,20 @@ function bindEvents() {
     const wrap = event.target.closest('[data-counter]');
     if (!wrap) return;
     const type = wrap.dataset.counter;
+    const key = wrap.dataset.counterKey;
+    if (!type || !key) return;
     if (event.target.closest('.counter-reset')) {
-      state.counters[type] = 0;
+      state.counters[key] = 0;
       persist();
-      refreshCounter(wrap, type, false);
+      refreshCounter(wrap, key, type, false);
       return;
     }
     if (!event.target.closest('.counter-btn')) return;
-    const count = state.counters[type] || 0;
+    const count = state.counters[key] || 0;
     if (count >= 7) return;
-    state.counters[type] = count + 1;
+    state.counters[key] = count + 1;
     persist();
-    refreshCounter(wrap, type, true);
+    refreshCounter(wrap, key, type, true);
   });
 
   $('#duaSearch')?.addEventListener('input', (event) => {
@@ -1388,8 +1610,8 @@ function bindEvents() {
   window.addEventListener('beforeunload', stopMedia);
 }
 
-function refreshCounter(wrap, type, burst) {
-  const count = state.counters[type] || 0;
+function refreshCounter(wrap, key, type, burst) {
+  const count = state.counters[key] || 0;
   const ring = $('.ring-fill', wrap);
   const num = $('.count-num', wrap);
   const status = $('.counter-status', wrap);

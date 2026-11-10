@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Umrah Journey — A step-by-step guide with duas</title>
-  <meta name="description" content="An interactive, voice-guided walkthrough of Umrah: every rite, every dua, with authentic references from the Qur’an and Sunnah. English, Arabic and Urdu.">
+  <title>Umrah & Hajj Journey — A step-by-step guide with duas</title>
+  <meta name="description" content="An interactive, voice-guided walkthrough of Umrah and Hajj: every rite, every dua, with authentic references from the Qur’an and Sunnah. English, Arabic and Urdu.">
   <meta name="theme-color" content="#07130f">
-  <meta property="og:title" content="Umrah Journey — walk the path of the pilgrim">
-  <meta property="og:description" content="Every rite, every dua, explained step by step with authentic references.">
+  <meta property="og:title" content="Umrah & Hajj Journey — walk the path of the pilgrim">
+  <meta property="og:description" content="Every rite of Umrah and Hajj, every dua, explained step by step with authentic references.">
   <meta property="og:type" content="website">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -87,7 +87,7 @@
     <section class="hero" id="top">
       <div class="hero-glow" aria-hidden="true"></div>
       <div class="hero-geometry" id="heroGeometry" aria-hidden="true"></div>
-      <div class="hero-arabic" aria-hidden="true">العمرة</div>
+      <div class="hero-arabic" id="heroArabic" aria-hidden="true">العمرة</div>
 
       <div class="hero-inner">
         <p class="eyebrow" data-i18n="hero.eyebrow">An interactive Umrah guide</p>
@@ -114,7 +114,7 @@
             <span data-i18n="hero.stat.countries">countries reached</span>
           </div>
           <div class="hero-stat">
-            <strong>08</strong>
+            <strong id="statRites">19</strong>
             <span data-i18n="hero.stat.steps">guided steps</span>
           </div>
         </div>
@@ -127,11 +127,36 @@
       <div class="container">
         <div class="section-head reveal">
           <p class="eyebrow" data-i18n="journey.eyebrow">The walkthrough</p>
-          <h2 data-i18n="journey.title">Eight rites, one intention</h2>
-          <p class="lead" data-i18n="journey.subtitle">Move through each step at your own pace. Listen to the narration, read the dua, and mark your progress — it is saved on this device.</p>
+          <h2 id="journeyTitle" data-i18n="journey.title">Eight rites, one intention</h2>
+          <p class="lead" id="journeySubtitle" data-i18n="journey.subtitle">Move through each step at your own pace. Listen to the narration, read the dua, and mark your progress — it is saved on this device.</p>
         </div>
 
         <div class="journey-shell">
+          <div class="journey-switch reveal" id="journeySwitch" role="group" aria-label="Choose your journey">
+            <button class="journey-tab is-active" type="button" data-journey="umrah" aria-pressed="true">
+              <span class="journey-tab-name" data-i18n="journey.umrah">Umrah</span>
+              <span class="journey-tab-meta" data-i18n="journey.umrahMeta">8 rites</span>
+            </button>
+            <button class="journey-tab" type="button" data-journey="hajj" aria-pressed="false">
+              <span class="journey-tab-name" data-i18n="journey.hajj">Hajj</span>
+              <span class="journey-tab-meta" data-i18n="journey.hajjMeta">11 rites · 5 days</span>
+            </button>
+          </div>
+
+          <div class="hajj-panel" id="hajjPanel" hidden>
+            <div class="hajj-panel-head">
+              <div>
+                <p class="hajj-panel-kicker" data-i18n="hajj.typeLabel">Your Hajj type</p>
+                <p class="hajj-panel-note" data-i18n="hajj.typeHint">Choose one. The guide below adapts to it.</p>
+              </div>
+              <button class="btn btn-quiet hajj-compare-toggle" id="hajjCompareToggle" type="button" aria-expanded="false">
+                <span data-i18n="hajj.compareShow">Compare the three</span>
+              </button>
+            </div>
+            <div class="hajj-types" id="hajjTypes"></div>
+            <div class="hajj-compare" id="hajjCompare" hidden></div>
+          </div>
+
           <div class="journey-top reveal">
             <div class="progress-wrap">
               <span class="progress-label" data-i18n="journey.progress">Your progress</span>
@@ -237,7 +262,7 @@
           <p class="lead" data-i18n="prepare.subtitle">Pack with intention. Learn the order. Settle what you owe. The rites are short; the preparation is where the journey begins.</p>
         </div>
 
-        <h3 class="block-title reveal" data-i18n="prepare.pillars">The four pillars of Umrah</h3>
+        <h3 class="block-title reveal" id="pillarsTitle" data-i18n="prepare.pillars">The four pillars of Umrah</h3>
         <div class="pillars" id="pillars"></div>
 
         <div class="block-head reveal">

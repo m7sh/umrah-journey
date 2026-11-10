@@ -294,6 +294,161 @@ export const SCENES = {
       </g>
     </svg>`,
 
+  mina: () => `
+    <svg viewBox="0 0 600 420" class="scene-svg" aria-hidden="true" focusable="false">
+      ${DEFS}
+      <rect width="600" height="420" fill="url(#skyFade)"/>
+      <circle cx="300" cy="196" r="200" fill="url(#sceneGlow)"/>
+      ${STARS}
+      <g class="moon">
+        <path d="M498 78a42 42 0 1 0 32 64 34 34 0 1 1-32-64z" fill="var(--gold-2)" opacity=".85"/>
+      </g>
+      <path d="M0 250l88-74 70 52 62-44 94 70 84-58 92 62 110-70v232H0z" fill="var(--surface-2)" opacity=".5"/>
+      <path class="dune dune-front" d="M0 356c104-26 196-20 300 6s204 10 300-16v74H0z" fill="var(--surface)" opacity=".95"/>
+      <g class="mina-tents" stroke="var(--gold)" stroke-opacity=".5" fill="var(--surface-2)">
+        <path d="M70 330l38-44 38 44z" fill-opacity=".55"/>
+        <path d="M130 336l42-50 42 50z" fill-opacity=".7"/>
+        <path d="M196 330l38-44 38 44z" fill-opacity=".55"/>
+        <path d="M258 338l46-54 46 54z" fill-opacity=".75"/>
+        <path d="M330 330l40-46 40 46z" fill-opacity=".6"/>
+        <path d="M398 336l42-50 42 50z" fill-opacity=".72"/>
+        <path d="M462 330l38-44 38 44z" fill-opacity=".55"/>
+        <path d="M520 336l34-40 34 40z" fill-opacity=".65"/>
+      </g>
+      <g stroke="var(--gold-2)" stroke-width="1" stroke-opacity=".45">
+        <path d="M70 286c120 26 240 26 360 0s120-8 170 0" fill="none" stroke-dasharray="2 7"/>
+      </g>
+      <g class="particles">
+        ${Array.from({ length: 10 }, (_, i) => {
+          const x = 90 + ((i * 149) % 420);
+          const delay = (i * 0.6).toFixed(2);
+          return `<circle cx="${x}" cy="356" r="${1.4 + (i % 3)}" fill="var(--gold-2)" opacity=".45" style="--d:${delay}s"/>`;
+        }).join('')}
+      </g>
+      <text x="300" y="128" text-anchor="middle" class="scene-calligraphy" opacity=".55">منى</text>
+    </svg>`,
+
+  arafah: () => `
+    <svg viewBox="0 0 600 420" class="scene-svg" aria-hidden="true" focusable="false">
+      ${DEFS}
+      <rect width="600" height="420" fill="url(#skyFade)"/>
+      <circle cx="300" cy="170" r="196" fill="url(#sceneGlow)"/>
+      <circle cx="452" cy="106" r="46" fill="var(--gold-2)" opacity=".16"/>
+      <circle cx="452" cy="106" r="26" fill="var(--gold-2)" opacity=".32"/>
+      <path d="M0 300c96-58 200-96 300-96s204 38 300 96v120H0z" fill="var(--surface-2)" opacity=".62"/>
+      <path d="M0 340c108-40 206-58 300-58s192 18 300 58v80H0z" fill="var(--surface)" opacity=".96"/>
+      <path class="arafah-hill" d="M214 322c18-46 42-70 86-70s68 24 86 70z" fill="var(--surface-2)" stroke="var(--gold)" stroke-opacity=".38"/>
+      <g class="pilgrims" stroke="var(--gold)" stroke-opacity=".55" stroke-width="1.6" fill="none">
+        <circle cx="196" cy="316" r="5"/><path d="M196 321v18"/>
+        <circle cx="238" cy="322" r="5"/><path d="M238 327v16"/>
+        <circle cx="286" cy="300" r="5"/><path d="M286 305v18"/>
+        <circle cx="330" cy="306" r="5"/><path d="M330 311v16"/>
+        <circle cx="374" cy="320" r="5"/><path d="M374 325v15"/>
+        <circle cx="414" cy="316" r="5"/><path d="M414 321v17"/>
+      </g>
+      <g stroke="var(--gold-2)" stroke-width="1" stroke-opacity=".35" stroke-dasharray="3 8">
+        <path d="M96 352h408"/>
+      </g>
+      <text x="300" y="132" text-anchor="middle" class="scene-calligraphy" opacity=".6">عرفة</text>
+    </svg>`,
+
+  muzdalifah: () => `
+    <svg viewBox="0 0 600 420" class="scene-svg" aria-hidden="true" focusable="false">
+      ${DEFS}
+      <rect width="600" height="420" fill="url(#skyFade)"/>
+      <circle cx="300" cy="180" r="210" fill="url(#sceneGlow)"/>
+      ${STARS}
+      <g class="moon">
+        <path d="M470 70a38 38 0 1 0 28 58 30 30 0 1 1-28-58z" fill="var(--gold-2)" opacity=".85"/>
+      </g>
+      <path d="M0 286c92-30 198-34 300-10s208 14 300-10v154H0z" fill="var(--surface-2)" opacity=".55"/>
+      <path d="M0 348c116-22 206-16 300 6s196 8 300-14v80H0z" fill="var(--surface)" opacity=".96"/>
+      <g stroke="var(--gold)" stroke-opacity=".45" fill="var(--surface-2)" stroke-width="1.2">
+        <rect x="120" y="330" width="84" height="16" rx="8" fill-opacity=".55"/>
+        <rect x="258" y="340" width="84" height="16" rx="8" fill-opacity=".55"/>
+        <rect x="396" y="330" width="84" height="16" rx="8" fill-opacity=".55"/>
+      </g>
+      <g fill="var(--gold-2)" opacity=".6">
+        ${Array.from({ length: 16 }, (_, i) => {
+          const x = 150 + ((i * 73) % 320);
+          const y = 356 + ((i * 37) % 26);
+          return `<circle cx="${x}" cy="${y}" r="${1.2 + (i % 2) * 0.8}"/>`;
+        }).join('')}
+      </g>
+      <text x="300" y="126" text-anchor="middle" class="scene-calligraphy" opacity=".55">المزدلفة</text>
+    </svg>`,
+
+  jamarat: () => `
+    <svg viewBox="0 0 600 420" class="scene-svg" aria-hidden="true" focusable="false">
+      ${DEFS}
+      <rect width="600" height="420" fill="url(#skyFade)"/>
+      <circle cx="300" cy="210" r="196" fill="url(#sceneGlow)"/>
+      <path d="M0 330c104-24 196-18 300 6s204 8 300-14v98H0z" fill="var(--surface)" opacity=".95"/>
+      <g stroke="var(--gold)" stroke-width="2">
+        <rect x="150" y="216" width="34" height="116" rx="10" fill="var(--surface-2)" fill-opacity=".8" stroke-opacity=".45"/>
+        <rect x="283" y="196" width="34" height="136" rx="10" fill="var(--surface-2)" fill-opacity=".85" stroke-opacity=".55"/>
+        <rect x="416" y="176" width="34" height="156" rx="10" fill="var(--surface-2)" fill-opacity=".9" stroke-opacity=".7"/>
+      </g>
+      <g stroke="var(--gold-2)" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".7">
+        <path class="pebble-arc pa1" d="M70 300c34-52 74-62 92-30"/>
+        <path class="pebble-arc pa2" d="M206 282c34-50 74-58 90-26"/>
+        <path class="pebble-arc pa3" d="M340 264c32-48 70-56 86-24"/>
+      </g>
+      <g fill="var(--gold-2)" opacity=".75">
+        <circle cx="94" cy="286" r="4"/><circle cx="122" cy="262" r="3.4"/><circle cx="150" cy="256" r="3"/>
+        <circle cx="228" cy="270" r="4"/><circle cx="256" cy="248" r="3.4"/><circle cx="284" cy="244" r="3"/>
+        <circle cx="362" cy="252" r="4"/><circle cx="390" cy="230" r="3.4"/><circle cx="418" cy="226" r="3"/>
+      </g>
+      <text x="300" y="120" text-anchor="middle" class="scene-calligraphy" opacity=".55">الجمرات</text>
+    </svg>`,
+
+  sacrifice: () => `
+    <svg viewBox="0 0 600 420" class="scene-svg" aria-hidden="true" focusable="false">
+      ${DEFS}
+      <rect width="600" height="420" fill="url(#skyFade)"/>
+      <circle cx="300" cy="200" r="190" fill="url(#sceneGlow)"/>
+      ${STARS}
+      <path d="M0 330c110-30 204-22 300 4s198 8 300-16v102H0z" fill="var(--surface)" opacity=".96"/>
+      <g class="ram" transform="translate(300 262)" stroke="var(--gold)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M-46 12c-10-30 10-58 40-58 22 0 38 14 52 26 10 8 20 10 30 8" />
+        <path d="M-52 4c-16-8-22-30-12-44 8-12 24-14 34-4 8 8 8 20 0 28"/>
+        <path d="M-52 4c-6 6-8 16-4 24"/>
+        <path d="M34 20c14 2 26 12 30 24"/>
+        <path d="M58 44l6 18M38 44l-2 18"/>
+        <circle cx="66" cy="-14" r="2.4" fill="var(--gold)" stroke="none"/>
+        <path d="M70 -12c8 6 12 14 10 22" stroke-opacity=".55"/>
+      </g>
+      <g class="sacred-glow" fill="none" stroke="var(--gold-2)" stroke-opacity=".3">
+        <circle cx="300" cy="236" r="112" stroke-dasharray="2 10"/>
+        <circle cx="300" cy="236" r="88" stroke-dasharray="8 12"/>
+      </g>
+      <text x="300" y="128" text-anchor="middle" class="scene-calligraphy" opacity=".55">الهدي</text>
+    </svg>`,
+
+  wada: () => `
+    <svg viewBox="0 0 600 420" class="scene-svg" aria-hidden="true" focusable="false">
+      ${DEFS}
+      <rect width="600" height="420" fill="url(#skyFade)"/>
+      <circle cx="300" cy="196" r="196" fill="url(#sceneGlow)"/>
+      <circle cx="300" cy="286" r="72" fill="var(--gold-2)" opacity=".1"/>
+      <path d="M0 334c118-26 208-18 300 4s184 8 300-18v100H0z" fill="var(--surface)" opacity=".96"/>
+      <g class="kaaba-small" transform="translate(300 300)">
+        <rect x="-58" y="-90" width="116" height="90" fill="url(#kiswah)" stroke="var(--gold)" stroke-width="2"/>
+        <rect x="-58" y="-72" width="116" height="15" fill="url(#goldBar)" opacity=".9"/>
+        <rect x="26" y="-36" width="20" height="36" fill="var(--gold)" opacity=".8"/>
+        <path d="M-76 2h152" stroke="var(--gold)" stroke-opacity=".35" stroke-width="2"/>
+      </g>
+      <g stroke="var(--gold-2)" stroke-width="1.4" stroke-dasharray="3 10" fill="none" opacity=".55">
+        <path d="M300 360c-80 30-126 42-214 48"/>
+        <path d="M300 360c80 30 126 42 214 48"/>
+      </g>
+      <g stroke="var(--gold)" stroke-width="1.4" fill="none" opacity=".6" stroke-linecap="round">
+        <path d="M96 118l6 14 14 6-14 6-6 14-6-14-14-6 14-6z"/>
+        <path d="M498 150l5 11 11 5-11 5-5 11-5-11-11-5 11-5z"/>
+      </g>
+      <text x="300" y="126" text-anchor="middle" class="scene-calligraphy" opacity=".55">الوداع</text>
+    </svg>`,
+
   complete: () => `
     <svg viewBox="0 0 600 420" class="scene-svg" aria-hidden="true" focusable="false">
       ${DEFS}

@@ -802,6 +802,297 @@ html[dir='rtl'] .hero-geometry {
   gap: 22px;
 }
 
+/* ---------- Journey switcher ---------- */
+
+.journey-switch {
+  display: inline-flex;
+  align-self: flex-start;
+  justify-self: start;
+  max-width: 100%;
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.journey-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 132px;
+  padding: 9px 20px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  text-align: start;
+  transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.journey-tab:hover {
+  color: var(--ink);
+}
+
+.journey-tab .journey-tab-name {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+}
+
+.journey-tab .journey-tab-meta {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.journey-tab.is-active {
+  color: var(--ink);
+  border-color: var(--line);
+  background: linear-gradient(140deg, rgba(215, 176, 106, 0.16), rgba(43, 154, 114, 0.12));
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+}
+
+.journey-tab.is-active .journey-tab-meta {
+  color: var(--gold);
+  opacity: 1;
+}
+
+/* ---------- Hajj type panel ---------- */
+
+.hajj-panel {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(600px 240px at 12% 0%, rgba(215, 176, 106, 0.1), transparent 70%),
+    color-mix(in srgb, var(--surface) 72%, transparent);
+  box-shadow: var(--shadow-soft);
+}
+
+.hajj-panel[hidden],
+.hajj-compare[hidden] {
+  display: none;
+}
+
+.hajj-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.hajj-panel-kicker {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--ink);
+}
+
+.hajj-panel-note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.hajj-compare-toggle {
+  flex-shrink: 0;
+}
+
+.hajj-types {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hajj-type {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--surface-2) 55%, transparent);
+  color: var(--ink-soft);
+  text-align: start;
+  transition: border-color 0.25s ease, transform 0.25s ease, background 0.25s ease;
+}
+
+.hajj-type:hover {
+  border-color: var(--line);
+  transform: translateY(-2px);
+}
+
+.hajj-type.is-active {
+  border-color: var(--gold);
+  background: linear-gradient(150deg, rgba(215, 176, 106, 0.14), rgba(43, 154, 114, 0.1));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+}
+
+.hajj-type-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.hajj-type-ar {
+  font-family: var(--font-arabic);
+  font-size: 1.4rem;
+  line-height: 1.1;
+  color: var(--gold-2);
+}
+
+.hajj-type-badge {
+  padding: 3px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+.hajj-type-name {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--ink);
+}
+
+.hajj-type-tag {
+  font-size: 0.82rem;
+  color: var(--gold-2);
+}
+
+.hajj-type-who {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.hajj-type-sac {
+  margin-top: auto;
+  padding-top: 8px;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--emerald);
+}
+
+.hajj-type-points {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding-top: 8px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.hajj-type-points span {
+  position: relative;
+  padding-inline-start: 14px;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.hajj-type-points span::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.56em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.hajj-compare {
+  padding-top: 16px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.hajj-compare-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.hajj-compare-title {
+  grid-column: 1 / -1;
+  margin: 0 0 2px;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hajj-compare-col {
+  padding: 14px 16px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--surface-2) 40%, transparent);
+}
+
+.hajj-compare-col h4 {
+  margin: 0;
+  font-family: var(--font-arabic);
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--gold-2);
+}
+
+.hajj-compare-tag {
+  margin: 2px 0 10px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.hajj-compare-col ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hajj-compare-col li {
+  position: relative;
+  padding-inline-start: 14px;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.hajj-compare-col li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.56em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.hajj-compare-sac {
+  margin: 10px 0 0;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--emerald);
+}
+
+
 .journey-top {
   display: flex;
   align-items: center;
@@ -851,7 +1142,7 @@ html[dir='rtl'] .hero-geometry {
 
 .step-rail {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(var(--rail-count, 8), minmax(0, 1fr));
   gap: 6px;
 }
 
@@ -2480,6 +2771,11 @@ html[dir='rtl'] .source-ref svg {
     grid-template-columns: 1fr;
   }
 
+  .hajj-types,
+  .hajj-compare-grid {
+    grid-template-columns: 1fr;
+  }
+
   .hero {
     padding-top: calc(var(--header-h) + 60px);
   }
@@ -2510,6 +2806,25 @@ html[dir='rtl'] .source-ref svg {
 
   .hero-title {
     font-size: clamp(2.3rem, 10vw, 3.4rem);
+  }
+
+  .journey-switch {
+    display: flex;
+    width: 100%;
+  }
+
+  .journey-tab {
+    flex: 1;
+    min-width: 0;
+    padding: 9px 12px;
+  }
+
+  .journey-tab .journey-tab-name {
+    font-size: 0.98rem;
+  }
+
+  .hajj-panel {
+    padding: 16px;
   }
 
   .hero-stats {

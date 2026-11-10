@@ -344,6 +344,8 @@ async function handleEvent(req, res) {
     'step_view',
     'step_complete',
     'journey_complete',
+    'journey_switch',
+    'hajj_type',
     'dua_play',
     'dua_words',
     'voice_play',
