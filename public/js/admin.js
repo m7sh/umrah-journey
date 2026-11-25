@@ -48,6 +48,39 @@ const nav = $('#adminNav');
 const logoutBtn = $('#logoutBtn');
 const refreshBtn = $('#refreshBtn');
 const exportBtn = $('#exportBtn');
+const themeToggle = $('#adminThemeToggle');
+
+function applyAdminTheme(theme) {
+  const next = theme === 'dark' ? 'dark' : 'light';
+  document.documentElement.dataset.theme = next;
+  try {
+    localStorage.setItem('umrah.theme', JSON.stringify(next));
+  } catch {
+    /* ignore */
+  }
+  const sun = $('.icon-sun', themeToggle || document);
+  const moon = $('.icon-moon', themeToggle || document);
+  if (sun) sun.toggleAttribute('hidden', next !== 'dark');
+  if (moon) moon.toggleAttribute('hidden', next !== 'light');
+}
+
+(() => {
+  let saved = null;
+  try {
+    const raw = localStorage.getItem('umrah.theme');
+    saved = raw ? JSON.parse(raw) : null;
+  } catch {
+    saved = null;
+  }
+  const initial = saved === 'dark' || saved === 'light'
+    ? saved
+    : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  applyAdminTheme(initial);
+})();
+
+themeToggle?.addEventListener('click', () => {
+  applyAdminTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+});
 
 let token = sessionStorage.getItem(TOKEN_KEY) || '';
 let lastData = null;

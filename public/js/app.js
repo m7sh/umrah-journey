@@ -74,7 +74,7 @@ const initialDone = read(initialDoneKey, []);
 
 const state = {
   lang: LANGS.some((l) => l.code === initialLang) ? initialLang : 'en',
-  theme: read(STORAGE.theme, window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'),
+  theme: read(STORAGE.theme, window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
   journey: initialJourney,
   hajjType: initialHajjType,
   step: clamp(Number(read(initialStepKey, 0)) || 0, 0, initialStepCount - 1),
@@ -102,10 +102,16 @@ const state = {
     return out;
   })(),
   duas: [],
+  duaFilter: 'all',
+  duasExpanded: false,
   query: '',
   journeyCompleteSent: false,
   viewed: new Set()
 };
+
+const UMRAH_DUA_IDS = new Set(Object.keys(DUAS));
+const HAJJ_DUA_IDS = new Set(Object.keys(HAJJ_DUAS));
+const INITIAL_DUA_LIMIT = 6;
 
 /* Hajj shares one guide across Tamattu‘, Ifrad and Qiran. Each step may
    override text, actions or tips for the selected type. */
@@ -205,7 +211,10 @@ function loadCounter() {
       latestCounter = data;
       countUp($('#statVisitors'), data.total);
       const countries = $('#statCountries');
-      if (countries) countries.textContent = String(data.countries ?? 0).padStart(2, '0');
+      const countriesItem = $('#statCountriesItem');
+      const count = Number(data.countries ?? 0);
+      if (countries) countries.textContent = String(count);
+      if (countriesItem) countriesItem.hidden = count <= 0;
       renderFooterVisits();
     })
     .catch(() => {});
@@ -218,7 +227,7 @@ function countUp(el, target) {
     return;
   }
   const start = performance.now();
-  const duration = 1200;
+  const duration = 900;
   const from = 0;
   const tick = (now) => {
     const p = Math.min(1, (now - start) / duration);
@@ -276,7 +285,7 @@ function pickVoice(lang) {
   return matches.sort((a, b) => score(b) - score(a))[0];
 }
 
-function chunkText(text, lang) {
+function chunkText(text) {
   const normalized = String(text).replace(/\s+/g, ' ').trim();
   if (!normalized) return [];
   const sentences = normalized.match(/[^.!?۔؟…]+[.!?۔؟…]?/g) || [normalized];
@@ -342,7 +351,7 @@ function speakText({ key, text, lang, onend }) {
   currentKey = key;
   updatePlayUI();
 
-  const parts = chunkText(text, lang);
+  const parts = chunkText(text);
   if (!parts.length) {
     currentKey = null;
     updatePlayUI();
@@ -596,11 +605,12 @@ function updatePlayUI() {
   const btn = $('#playNarration');
   if (btn) {
     const playing = currentKey === narrationKey;
+    btn.classList.toggle('is-playing', playing);
     const playIcon = btn.querySelector('.i-play');
     const stopIcon = btn.querySelector('.i-stop');
     const label = btn.querySelector('span');
-    if (playIcon) playIcon.hidden = playing;
-    if (stopIcon) stopIcon.hidden = !playing;
+    if (playIcon) playIcon.toggleAttribute('hidden', playing);
+    if (stopIcon) stopIcon.toggleAttribute('hidden', !playing);
     if (label) label.textContent = t(state.lang, playing ? 'journey.stop' : 'journey.listen');
   }
   $$('.dua-play').forEach((button) => {
@@ -637,28 +647,18 @@ function showToast(message) {
 /*  Rendering                                                          */
 /* ------------------------------------------------------------------ */
 
-function geometrySVG() {
-  const petals = Array.from({ length: 8 }, (_, i) => {
-    const a = (i * 360) / 8;
-    return `<g transform="rotate(${a} 300 300)">
-      <path d="M300 70c34 60 34 120 0 180-34-60-34-120 0-180z"/>
-    </g>`;
-  }).join('');
-  return `<svg viewBox="0 0 600 600" aria-hidden="true">
-    <g fill="none" stroke="var(--gold)" stroke-opacity=".3" stroke-width="1">
-      <circle cx="300" cy="300" r="282" stroke-dasharray="2 12"/>
-      <circle cx="300" cy="300" r="236"/>
-      <circle cx="300" cy="300" r="150" stroke-opacity=".2"/>
-      <rect x="88" y="88" width="424" height="424" stroke-opacity=".22"/>
-      <rect x="88" y="88" width="424" height="424" transform="rotate(45 300 300)" stroke-opacity=".22"/>
-      <rect x="150" y="150" width="300" height="300" stroke-opacity=".14" transform="rotate(22.5 300 300)"/>
-      ${petals}
-    </g>
-  </svg>`;
-}
-
 function stepTitle(step) {
   return pick(step.title, state.lang);
+}
+
+function stepSceneCount(step) {
+  const interactive = Array.isArray(step.interactive)
+    ? step.interactive[0]
+    : step.interactive;
+  if (interactive === 'tawaf' || interactive === 'sai') {
+    return state.counters[`${step.id}:${interactive}`] || 0;
+  }
+  return 0;
 }
 
 function renderJourneyChrome() {
@@ -700,19 +700,18 @@ function renderHajjTypes() {
 
   host.innerHTML = HAJJ_TYPES.map((type) => {
     const on = type.id === state.hajjType;
+    const showArabic = state.lang !== 'ar';
     return `<button class="hajj-type${on ? ' is-active' : ''}" type="button"
       data-hajj-type="${type.id}" aria-pressed="${on}">
       <span class="hajj-type-top">
-        <span class="hajj-type-ar" lang="ar" dir="rtl">${esc(type.arabic)}</span>
+        <span class="hajj-type-heading">
+          <span class="hajj-type-name">${esc(pick(type.label, state.lang))}</span>
+          ${showArabic ? `<span class="hajj-type-ar" lang="ar" dir="rtl">${esc(type.arabic)}</span>` : ''}
+        </span>
         <span class="hajj-type-badge">${esc(pick(type.badge, state.lang))}</span>
       </span>
-      <span class="hajj-type-name">${esc(pick(type.label, state.lang))}</span>
       <span class="hajj-type-tag">${esc(pick(type.tagline, state.lang))}</span>
-      <span class="hajj-type-who">${esc(pick(type.who, state.lang))}</span>
       <span class="hajj-type-sac">${esc(pick(type.sacrifice, state.lang))}</span>
-      <span class="hajj-type-points">${type.points
-        .map((point) => `<span>${esc(pick(point, state.lang))}</span>`)
-        .join('')}</span>
     </button>`;
   }).join('');
 
@@ -722,23 +721,41 @@ function renderHajjTypes() {
 function renderHajjCompare() {
   const host = $('#hajjCompare');
   if (!host) return;
-  host.innerHTML = `<div class="hajj-compare-grid">
-    <p class="hajj-compare-title" data-i18n="hajj.compareTitle">${esc(t(state.lang, 'hajj.compareTitle'))}</p>
-    ${HAJJ_TYPES.map((type) => `<div class="hajj-compare-col">
-      <h4 lang="ar" dir="rtl">${esc(type.arabic)}</h4>
-      <p class="hajj-compare-tag">${esc(pick(type.tagline, state.lang))}</p>
-      <ul>${type.points.map((point) => `<li>${esc(pick(point, state.lang))}</li>`).join('')}</ul>
-      <p class="hajj-compare-sac">${esc(pick(type.sacrifice, state.lang))}</p>
-    </div>`).join('')}
-  </div>`;
+
+  host.innerHTML = `
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>${esc(t(state.lang, 'hajj.compare.rite'))}</th>
+            ${HAJJ_TYPES.map((type) => `<th>${esc(pick(type.label, state.lang))}</th>`).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>${esc(t(state.lang, 'hajj.compare.umrah'))}</th>
+            ${HAJJ_TYPES.map((type) => `<td>${esc(pick(type.points[0], state.lang))}</td>`).join('')}
+          </tr>
+          <tr>
+            <th>${esc(t(state.lang, 'hajj.compare.ihram'))}</th>
+            ${HAJJ_TYPES.map((type) => `<td>${esc(pick(type.points[1], state.lang))}</td>`).join('')}
+          </tr>
+          <tr>
+            <th>${esc(t(state.lang, 'hajj.compare.sacrifice'))}</th>
+            ${HAJJ_TYPES.map((type) => `<td><strong>${esc(pick(type.sacrifice, state.lang))}</strong></td>`).join('')}
+          </tr>
+          <tr>
+            <th>${esc(t(state.lang, 'hajj.compare.who'))}</th>
+            ${HAJJ_TYPES.map((type) => `<td>${esc(pick(type.who, state.lang))}</td>`).join('')}
+          </tr>
+        </tbody>
+      </table>
+    </div>`;
 }
 
 function renderHero() {
   $('#heroTitle').textContent = pick(activeMeta().heroTitle, state.lang);
   $('#heroLead').textContent = pick(activeMeta().heroLead, state.lang);
-
-  const watermark = $('#heroArabic');
-  if (watermark) watermark.textContent = state.journey === 'hajj' ? HAJJ_META.heroArabic : 'العمرة';
 
   const startSpan = $('#heroStart span');
   if (startSpan) {
@@ -751,16 +768,20 @@ function renderRail() {
   const rail = $('#stepRail');
   if (!rail) return;
   const steps = activeSteps();
-  rail.style.setProperty('--rail-count', String(steps.length));
+  rail.dataset.count = String(steps.length);
   rail.innerHTML = steps.map((step, index) => {
     const active = index === state.step;
     const done = state.done.has(step.id);
     return `<button class="rail-btn${active ? ' is-active' : ''}${done ? ' is-done' : ''}"
       type="button" role="tab" aria-selected="${active}" data-step="${index}"
       aria-label="${esc(stepTitle(step))}">
-      <span class="rail-num">${String(step.num).padStart(2, '0')}</span>
+      <span class="rail-top">
+        <span class="rail-num">${String(step.num).padStart(2, '0')}</span>
+        <span class="rail-check" aria-hidden="true">${done
+          ? '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-6.5"/></svg>'
+          : '<span class="rail-dot"></span>'}</span>
+      </span>
       <span class="rail-name">${esc(stepTitle(step))}</span>
-      <span class="rail-bar"><i></i></span>
     </button>`;
   }).join('');
 }
@@ -769,25 +790,33 @@ function actionsHTML(step) {
   const items = step.actions || [];
   if (!items.length) return '';
   return `<p class="stage-subhead">${t(state.lang, 'journey.whatYouDo')}</p>
-    <ul class="action-list">${items.map((item) => `<li>${esc(pick(item, state.lang))}</li>`).join('')}</ul>`;
+    <ol class="action-list">${items.map((item) => `<li>${esc(pick(item, state.lang))}</li>`).join('')}</ol>`;
 }
 
 function tipsHTML(step) {
   const tips = step.tips || [];
   if (!tips.length) return '';
-  return tips
+  return `<div class="tip-stack">${tips
     .map(
       (tip) => `<div class="tip-box">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
-          <path d="M9.5 18h5M10 21h4"/><path d="M12 3a6 6 0 0 1 3.5 10.9c-.6.4-.9 1-.9 1.7V16h-5.2v-.4c0-.7-.3-1.3-.9-1.7A6 6 0 0 1 12 3z"/>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.8v.2"/>
         </svg>
         <span>${esc(pick(tip, state.lang))}</span>
       </div>`
     )
-    .join('');
+    .join('')}</div>`;
 }
 
-function duaCard(dua) {
+function duaCategory(dua) {
+  const cats = [];
+  if (UMRAH_DUA_IDS.has(dua.id)) cats.push('umrah');
+  if (HAJJ_DUA_IDS.has(dua.id)) cats.push('hajj');
+  if (dua.quran) cats.push('quran');
+  return cats.join(' ');
+}
+
+function duaCard(dua, { compact = false } = {}) {
   const label = pick(dua.label, state.lang);
   const meaning = state.lang === 'ur' ? dua.ur : dua.en;
   const note = dua.note ? pick(dua.note, state.lang) : '';
@@ -813,7 +842,7 @@ function duaCard(dua) {
     .join(' ')
     .toLowerCase();
 
-  return `<article class="dua-card" data-dua-card="${dua.id}" data-search="${esc(searchBlob)}">
+  return `<article class="dua-card${compact ? ' is-compact' : ''}" data-dua-card="${dua.id}" data-cats="${duaCategory(dua)}" data-search="${esc(searchBlob)}">
     <div class="dua-head">
       <span class="dua-label">${esc(label)}</span>
       <div class="dua-actions">
@@ -822,11 +851,11 @@ function duaCard(dua) {
           <span>${esc(t(state.lang, 'dua.play'))}</span>
         </button>
         ${quran ? `<button class="dua-action dua-words-toggle" type="button" data-dua="${dua.id}" aria-expanded="false" aria-label="${esc(t(state.lang, 'dua.words'))}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M4 12h16M4 17h7"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M4 12h16M4 17h7"/></svg>
           <span>${esc(t(state.lang, 'dua.words'))}</span>
         </button>` : ''}
         <button class="dua-action dua-copy" type="button" data-dua="${dua.id}" aria-label="${esc(t(state.lang, 'dua.copy'))}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true">
             <rect x="8" y="8" width="11" height="12" rx="2"/><path d="M5 16V6a2 2 0 0 1 2-2h8"/>
           </svg>
           <span>${esc(t(state.lang, 'dua.copy'))}</span>
@@ -853,7 +882,7 @@ function duaCard(dua) {
       <div class="dua-ref">
         <span>${esc(t(state.lang, 'dua.reference'))}:</span>
         <a href="${esc(dua.url)}" target="_blank" rel="noopener noreferrer">${esc(dua.ref)}</a>
-        <span class="badge badge-soft">${esc(grade)}</span>
+        <span class="badge">${esc(grade)}</span>
       </div>
     </div>
     ${note ? `<p class="dua-note">${esc(note)}</p>` : ''}
@@ -864,7 +893,7 @@ function duasHTML(step) {
   const ids = step.duas || [];
   if (!ids.length) {
     return `<p class="stage-subhead">${t(state.lang, 'journey.duas')}</p>
-      <div class="dua-card"><p class="dua-en">${esc(t(state.lang, 'dua.none'))}</p></div>`;
+      <div class="dua-empty-box">${esc(t(state.lang, 'dua.none'))}</div>`;
   }
   return `<p class="stage-subhead">${t(state.lang, 'journey.duas')}</p>
     <div class="dua-stack">${ids.map((id) => (ALL_DUAS[id] ? duaCard(ALL_DUAS[id]) : '')).join('')}</div>`;
@@ -901,7 +930,7 @@ function counterStatus(type, count) {
   if (count >= 7) return t(state.lang, type === 'tawaf' ? 'tawaf.done' : 'sai.done');
   if (count === 0) return '';
   if (type === 'sai') {
-    return count % 2 === 0 ? 'المروة → الصفا' : 'الصفا → المروة';
+    return count % 2 === 0 ? 'المروة ← الصفا' : 'الصفا ← المروة';
   }
   return `${t(state.lang, 'tawaf.circuit')} ${count} ${t(state.lang, 'counter.of')} 7`;
 }
@@ -914,7 +943,7 @@ function renderStage() {
   $('#stageStepNum').textContent = String(step.num).padStart(2, '0');
   $('#stageStepOf').textContent = `${t(state.lang, 'journey.step')} ${step.num} ${t(state.lang, 'journey.of')} ${steps.length}`;
   $('#stageMinutes').textContent = `${step.minutes} ${t(state.lang, 'journey.min')}`;
-  $('#stageScene').innerHTML = sceneFor(step.scene);
+  $('#stageScene').innerHTML = sceneFor(step.scene, { count: stepSceneCount(step), lang: state.lang });
   $('#stageKicker').textContent = pick(step.kicker, state.lang);
   $('#stageTitle').textContent = stepTitle(step);
   $('#stageSummary').textContent = pick(step.summary, state.lang);
@@ -933,6 +962,7 @@ function renderStage() {
   const markBtn = $('#markComplete');
   if (doneState) doneState.hidden = !done;
   if (markBtn) {
+    markBtn.hidden = done;
     markBtn.disabled = done;
     markBtn.textContent = t(state.lang, done ? 'journey.completed' : 'journey.markDone');
   }
@@ -953,22 +983,56 @@ function renderDuas() {
   state.duas = Object.values(ALL_DUAS);
   const library = $('#duaLibrary');
   if (!library) return;
-  library.innerHTML = state.duas.map(duaCard).join('');
+  library.innerHTML = state.duas.map((dua) => duaCard(dua, { compact: true })).join('');
   applyDuaFilter();
-  const count = $('#duaCount');
-  if (count) count.textContent = `${state.duas.length}`;
 }
 
 function applyDuaFilter() {
   const query = state.query.trim().toLowerCase();
-  let visible = 0;
+  const filter = state.duaFilter;
+  const isFiltered = Boolean(query) || filter !== 'all';
+
+  let matching = 0;
+  let shown = 0;
+
   $$('#duaLibrary [data-dua-card]').forEach((card) => {
-    const match = !query || (card.dataset.search || '').includes(query);
-    card.hidden = !match;
-    if (match) visible += 1;
+    const cats = (card.dataset.cats || '').split(/\s+/);
+    const catMatch = filter === 'all' || cats.includes(filter);
+    const searchMatch = !query || (card.dataset.search || '').includes(query);
+    const matches = catMatch && searchMatch;
+    if (!matches) {
+      card.hidden = true;
+      return;
+    }
+    matching += 1;
+    const withinLimit = isFiltered || state.duasExpanded || matching <= INITIAL_DUA_LIMIT;
+    card.hidden = !withinLimit;
+    if (withinLimit) shown += 1;
   });
+
+  $$('#duaFilters [data-dua-filter]').forEach((btn) => {
+    const active = btn.dataset.duaFilter === filter;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', String(active));
+  });
+
   const count = $('#duaCount');
-  if (count) count.textContent = query ? `${visible} / ${state.duas.length}` : `${state.duas.length}`;
+  if (count) {
+    count.textContent = isFiltered ? `${matching} / ${state.duas.length}` : `${state.duas.length}`;
+  }
+
+  const empty = $('#duaEmpty');
+  if (empty) empty.hidden = matching > 0;
+
+  const moreWrap = $('#duaMoreWrap');
+  const expandBtn = $('#duaExpandBtn');
+  const showToggle = !isFiltered && matching > INITIAL_DUA_LIMIT;
+  if (moreWrap) moreWrap.hidden = !showToggle;
+  if (expandBtn && showToggle) {
+    expandBtn.textContent = state.duasExpanded
+      ? t(state.lang, 'duas.showLess')
+      : t(state.lang, 'duas.showAll').replace('{count}', String(matching));
+  }
 }
 
 function renderPillars() {
@@ -993,7 +1057,7 @@ function renderChecklist() {
   host.innerHTML = activeChecklist().map((group) => `
     <div class="check-group reveal">
       <h3>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 7.5l4 4 8-9M4 17.5l4 4 8-9"/>
         </svg>
         ${esc(pick(group.title, state.lang))}
@@ -1048,7 +1112,7 @@ function renderSources() {
     <a class="source-card" href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">
       <span class="source-title">${esc(pick(source.title, state.lang))}</span>
       <span class="source-ref">
-        ${esc(source.ref)}
+        <span>${esc(source.ref)}</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M7 17L17 7M9 7h8v8"/>
         </svg>
@@ -1111,13 +1175,13 @@ function setStep(index, { scroll = false, silent = false } = {}) {
   if (scroll) {
     const stage = $('#stage');
     if (stage) {
-      const top = stage.getBoundingClientRect().top + window.scrollY - 96;
+      const top = stage.getBoundingClientRect().top + window.scrollY - 88;
       window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
     }
   }
 
   const activeRail = $(`#stepRail [data-step="${next}"]`);
-  if (activeRail) {
+  if (activeRail && window.innerWidth <= 720) {
     activeRail.scrollIntoView({ block: 'nearest', inline: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
   }
 }
@@ -1231,13 +1295,15 @@ function setLang(lang) {
 }
 
 function setTheme(theme, { silent = false } = {}) {
-  state.theme = theme === 'light' ? 'light' : 'dark';
+  state.theme = theme === 'dark' ? 'dark' : 'light';
   persist();
   html.dataset.theme = state.theme;
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) metaTheme.setAttribute('content', state.theme === 'dark' ? '#0b0c0e' : '#ffffff');
   const sun = $('.icon-sun');
   const moon = $('.icon-moon');
-  if (sun) sun.hidden = state.theme !== 'dark';
-  if (moon) moon.hidden = state.theme !== 'light';
+  if (sun) sun.toggleAttribute('hidden', state.theme !== 'dark');
+  if (moon) moon.toggleAttribute('hidden', state.theme !== 'light');
   const toggle = $('#themeToggle');
   if (toggle) {
     toggle.setAttribute('aria-label', t(state.lang, state.theme === 'dark' ? 'theme.toLight' : 'theme.toDark'));
@@ -1253,8 +1319,8 @@ function updateVoiceUI() {
   toggle.setAttribute('aria-label', t(state.lang, state.voice ? 'voice.on' : 'voice.off'));
   const on = $('.icon-voice-on', toggle);
   const off = $('.icon-voice-off', toggle);
-  if (on) on.hidden = !state.voice;
-  if (off) off.hidden = state.voice;
+  if (on) on.toggleAttribute('hidden', !state.voice);
+  if (off) off.toggleAttribute('hidden', state.voice);
 }
 
 function toggleVoice() {
@@ -1348,7 +1414,7 @@ function observeReveals(root = document) {
           }
         });
       },
-      { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+      { rootMargin: '0px 0px -6% 0px', threshold: 0.05 }
     );
   }
   $$('.reveal:not(.in)', root).forEach((el) => revealObserver.observe(el));
@@ -1383,7 +1449,7 @@ function setupScrollSpy() {
 
 function bindEvents() {
   const header = $('#siteHeader');
-  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 16);
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 12);
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
@@ -1394,8 +1460,8 @@ function bindEvents() {
     menuToggle.setAttribute('aria-label', t(state.lang, open ? 'menu.close' : 'menu.open'));
     const menu = $('.icon-menu', menuToggle);
     const close = $('.icon-close', menuToggle);
-    if (menu) menu.hidden = open;
-    if (close) close.hidden = !open;
+    if (menu) menu.toggleAttribute('hidden', open);
+    if (close) close.toggleAttribute('hidden', !open);
   });
 
   $$('#siteNav a').forEach((link) => {
@@ -1404,8 +1470,14 @@ function bindEvents() {
       menuToggle?.setAttribute('aria-expanded', 'false');
       const menu = $('.icon-menu', menuToggle);
       const close = $('.icon-close', menuToggle);
-      if (menu) menu.hidden = false;
-      if (close) close.hidden = true;
+      if (menu) menu.toggleAttribute('hidden', false);
+      if (close) close.toggleAttribute('hidden', true);
+    });
+  });
+
+  $$('[data-hero-journey]').forEach((card) => {
+    card.addEventListener('click', () => {
+      switchJourney(card.dataset.heroJourney);
     });
   });
 
@@ -1501,6 +1573,18 @@ function bindEvents() {
       }
     });
     trackEvent('voice_play', { step: step.id });
+  });
+
+  $('#duaFilters')?.addEventListener('click', (event) => {
+    const btn = event.target.closest('[data-dua-filter]');
+    if (!btn) return;
+    state.duaFilter = btn.dataset.duaFilter || 'all';
+    applyDuaFilter();
+  });
+
+  $('#duaExpandBtn')?.addEventListener('click', () => {
+    state.duasExpanded = !state.duasExpanded;
+    applyDuaFilter();
   });
 
   document.addEventListener('click', async (event) => {
@@ -1622,6 +1706,11 @@ function refreshCounter(wrap, key, type, burst) {
     status.textContent = counterStatus(type, count);
     status.classList.toggle('is-done', count >= 7);
   }
+  const step = activeSteps()[state.step];
+  const sceneEl = $('#stageScene');
+  if (step && sceneEl && (type === 'tawaf' || type === 'sai')) {
+    sceneEl.innerHTML = sceneFor(step.scene, { count, lang: state.lang });
+  }
   if (burst && burstEl && !reduceMotion) {
     burstEl.classList.remove('go');
     void burstEl.offsetWidth;
@@ -1640,8 +1729,6 @@ function boot() {
 
   const select = $('#langSelect');
   if (select) select.value = state.lang;
-
-  $('#heroGeometry').innerHTML = geometrySVG();
 
   applyStatic();
   setTheme(state.theme, { silent: true });

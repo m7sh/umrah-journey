@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-theme="dark">
+<html lang="en" dir="ltr" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Umrah & Hajj Journey — A step-by-step guide with duas</title>
+  <title>Umrah &amp; Hajj Journey — A step-by-step guide with duas</title>
   <meta name="description" content="An interactive, voice-guided walkthrough of Umrah and Hajj: every rite, every dua, with authentic references from the Qur’an and Sunnah. English, Arabic and Urdu.">
-  <meta name="theme-color" content="#07130f">
-  <meta property="og:title" content="Umrah & Hajj Journey — walk the path of the pilgrim">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:title" content="Umrah &amp; Hajj Journey — walk the path of the pilgrim">
   <meta property="og:description" content="Every rite of Umrah and Hajj, every dua, explained step by step with authentic references.">
   <meta property="og:type" content="website">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://verses.quran.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
@@ -23,19 +23,20 @@
     <div class="header-inner">
       <a class="brand" href="#top" aria-label="Umrah Journey">
         <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round">
-            <path d="M12 2.5l2.6 6.9 6.9 2.6-6.9 2.6L12 21.5l-2.6-6.9L2.5 12l6.9-2.6z"/>
-            <circle cx="12" cy="12" r="2.6"/>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+            <rect x="5" y="5" width="14" height="14" rx="1.5"/>
+            <rect x="5" y="5" width="14" height="14" rx="1.5" transform="rotate(45 12 12)"/>
+            <rect x="9.5" y="9.5" width="5" height="5" rx="0.8" fill="currentColor" stroke="none"/>
           </svg>
         </span>
         <span class="brand-text">
-          <span class="brand-name">Umrah Journey</span>
-          <span class="brand-sub" data-i18n="brand.sub">A guide for the heart</span>
+          <span class="brand-name" data-i18n="brand.name">Umrah Journey</span>
+          <span class="brand-sub" data-i18n="brand.sub">Umrah &amp; Hajj Guide</span>
         </span>
       </a>
 
       <nav class="site-nav" id="siteNav" aria-label="Primary">
-        <a href="#journey" data-i18n="nav.journey">The journey</a>
+        <a href="#journey" data-i18n="nav.journey">Walkthrough</a>
         <a href="#duas" data-i18n="nav.duas">Duas</a>
         <a href="#prepare" data-i18n="nav.prepare">Prepare</a>
         <a href="#faq" data-i18n="nav.faq">Questions</a>
@@ -50,32 +51,32 @@
           <option value="ur">اردو</option>
         </select>
 
-        <button class="icon-btn" id="voiceToggle" type="button" aria-pressed="true" data-i18n-aria="voice.on" aria-label="Voice on">
-          <svg class="icon-voice-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <button class="icon-btn" id="voiceToggle" type="button" aria-pressed="true" data-i18n-aria="voice.on" aria-label="Audio on">
+          <svg class="icon-voice-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 9v6h4l5 4V5L8 9H4z"/>
             <path d="M17 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12"/>
           </svg>
-          <svg class="icon-voice-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" hidden>
+          <svg class="icon-voice-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" hidden>
             <path d="M4 9v6h4l5 4V5L8 9H4z"/>
             <path d="M17 9l5 6M22 9l-5 6"/>
           </svg>
         </button>
 
-        <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch to light theme">
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch to dark theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" hidden>
             <circle cx="12" cy="12" r="4.2"/>
             <path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/>
           </svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" hidden>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7z"/>
           </svg>
         </button>
 
         <button class="icon-btn menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="siteNav" aria-label="Open menu">
-          <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+          <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
             <path d="M4 7h16M4 12h16M4 17h16"/>
           </svg>
-          <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" hidden>
+          <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" hidden>
             <path d="M6 6l12 12M18 6L6 18"/>
           </svg>
         </button>
@@ -85,54 +86,79 @@
 
   <main id="main">
     <section class="hero" id="top">
-      <div class="hero-glow" aria-hidden="true"></div>
-      <div class="hero-geometry" id="heroGeometry" aria-hidden="true"></div>
-      <div class="hero-arabic" id="heroArabic" aria-hidden="true">العمرة</div>
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="hero.eyebrow">Umrah &amp; Hajj · English · العربية · اردو</p>
+          <h1 class="hero-title" id="heroTitle">Walk the path of the pilgrim.</h1>
+          <p class="hero-lead" id="heroLead">From the first intention at the miqat to the final haircut — every rite, every dua, every detail, explained gently and authentically.</p>
 
-      <div class="hero-inner">
-        <p class="eyebrow" data-i18n="hero.eyebrow">An interactive Umrah guide</p>
-        <h1 class="hero-title" id="heroTitle">Walk the path of the pilgrim.</h1>
-        <p class="hero-lead" id="heroLead">From the first intention at the miqat to the final haircut — every rite, every dua, every detail, explained gently and authentically.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#journey" id="heroStart">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6"/>
-            </svg>
-            <span data-i18n="hero.start">Begin the journey</span>
-          </a>
-          <a class="btn btn-ghost" href="#duas" data-i18n="hero.browse">Browse the duas</a>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#journey" id="heroStart">
+              <span data-i18n="hero.start">Begin walkthrough</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6"/>
+              </svg>
+            </a>
+            <a class="btn btn-secondary" href="#duas" data-i18n="hero.browse">Browse duas</a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <strong id="statVisitors">—</strong>
+              <span data-i18n="hero.stat.visitors">pilgrims visited</span>
+            </div>
+            <div class="hero-stat" id="statCountriesItem" hidden>
+              <strong id="statCountries">0</strong>
+              <span data-i18n="hero.stat.countries">countries</span>
+            </div>
+            <div class="hero-stat">
+              <strong id="statRites">19</strong>
+              <span data-i18n="hero.stat.steps">guided rites</span>
+            </div>
+          </div>
         </div>
-        <p class="hero-note" data-i18n="hero.note">Authentic duas · voice narration · progress saved on this device</p>
 
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <strong id="statVisitors">—</strong>
-            <span data-i18n="hero.stat.visitors">pilgrims have visited</span>
-          </div>
-          <div class="hero-stat">
-            <strong id="statCountries">—</strong>
-            <span data-i18n="hero.stat.countries">countries reached</span>
-          </div>
-          <div class="hero-stat">
-            <strong id="statRites">19</strong>
-            <span data-i18n="hero.stat.steps">guided steps</span>
-          </div>
+        <div class="hero-bento">
+          <a class="bento-card" href="#journey" data-hero-journey="umrah">
+            <div class="bento-top">
+              <span class="bento-pill" data-i18n="hero.card.umrahMeta">8 rites · ~2–4 hrs</span>
+              <svg class="bento-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+            </div>
+            <h2 class="bento-title" data-i18n="hero.card.umrahTitle">Umrah</h2>
+            <p class="bento-desc" data-i18n="hero.card.umrahDesc">Ihram, Tawaf, Sa‘i and release — with a live 7-circuit counter.</p>
+          </a>
+
+          <a class="bento-card" href="#journey" data-hero-journey="hajj">
+            <div class="bento-top">
+              <span class="bento-pill" data-i18n="hero.card.hajjMeta">11 rites · 5 days</span>
+              <svg class="bento-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+            </div>
+            <h2 class="bento-title" data-i18n="hero.card.hajjTitle">Hajj</h2>
+            <p class="bento-desc" data-i18n="hero.card.hajjDesc">Adapts automatically to Tamattu‘, Ifrad and Qiran.</p>
+          </a>
+
+          <a class="bento-card" href="#duas" id="heroDuasCard">
+            <div class="bento-top">
+              <span class="bento-pill" data-i18n="hero.card.duasMeta">Word-by-word audio</span>
+              <svg class="bento-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+            </div>
+            <h2 class="bento-title" data-i18n="hero.card.duasTitle">15 Authentic Duas</h2>
+            <p class="bento-desc" data-i18n="hero.card.duasDesc">Arabic text, transliteration, meanings and direct Hadith sources.</p>
+          </a>
         </div>
       </div>
-
-      <div class="hero-scroll" data-i18n="hero.scroll">Scroll to begin</div>
     </section>
 
-    <section class="section journey" id="journey">
+    <section class="section section-tinted journey" id="journey">
       <div class="container">
-        <div class="section-head reveal">
-          <p class="eyebrow" data-i18n="journey.eyebrow">The walkthrough</p>
-          <h2 id="journeyTitle" data-i18n="journey.title">Eight rites, one intention</h2>
-          <p class="lead" id="journeySubtitle" data-i18n="journey.subtitle">Move through each step at your own pace. Listen to the narration, read the dua, and mark your progress — it is saved on this device.</p>
-        </div>
+        <div class="journey-header reveal">
+          <div class="section-head">
+            <p class="eyebrow" data-i18n="journey.eyebrow">Interactive walkthrough</p>
+            <h2 id="journeyTitle" data-i18n="journey.title">Eight rites, one intention</h2>
+            <p class="lead" id="journeySubtitle" data-i18n="journey.subtitle">Move through each rite at your own pace. Listen to the narration, count circuits cleanly, and track your progress on this device.</p>
+          </div>
 
-        <div class="journey-shell">
-          <div class="journey-switch reveal" id="journeySwitch" role="group" aria-label="Choose your journey">
+          <div class="journey-switch" id="journeySwitch" role="group" aria-label="Choose your journey">
             <button class="journey-tab is-active" type="button" data-journey="umrah" aria-pressed="true">
               <span class="journey-tab-name" data-i18n="journey.umrah">Umrah</span>
               <span class="journey-tab-meta" data-i18n="journey.umrahMeta">8 rites</span>
@@ -142,15 +168,17 @@
               <span class="journey-tab-meta" data-i18n="journey.hajjMeta">11 rites · 5 days</span>
             </button>
           </div>
+        </div>
 
+        <div class="journey-shell">
           <div class="hajj-panel" id="hajjPanel" hidden>
             <div class="hajj-panel-head">
               <div>
-                <p class="hajj-panel-kicker" data-i18n="hajj.typeLabel">Your Hajj type</p>
-                <p class="hajj-panel-note" data-i18n="hajj.typeHint">Choose one. The guide below adapts to it.</p>
+                <p class="hajj-panel-kicker" data-i18n="hajj.typeLabel">Choose your Hajj type</p>
+                <p class="hajj-panel-note" data-i18n="hajj.typeHint">The steps, narration, and actions below adapt to your selection.</p>
               </div>
               <button class="btn btn-quiet hajj-compare-toggle" id="hajjCompareToggle" type="button" aria-expanded="false">
-                <span data-i18n="hajj.compareShow">Compare the three</span>
+                <span data-i18n="hajj.compareShow">Compare all three</span>
               </button>
             </div>
             <div class="hajj-types" id="hajjTypes"></div>
@@ -159,18 +187,18 @@
 
           <div class="journey-top reveal">
             <div class="progress-wrap">
-              <span class="progress-label" data-i18n="journey.progress">Your progress</span>
+              <span class="progress-label" data-i18n="journey.progress">Progress</span>
               <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" id="journeyProgressBar">
                 <div class="progress-fill" id="journeyProgress"></div>
               </div>
-              <span class="progress-label" id="journeyProgressText">0 / 8</span>
+              <span class="progress-count" id="journeyProgressText">0 / 8</span>
             </div>
             <div class="journey-tools">
               <button class="auto-toggle" id="autoToggle" type="button" aria-pressed="false">
-                <span class="dot" aria-hidden="true"></span>
+                <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
                 <span data-i18n="journey.auto">Auto-advance</span>
               </button>
-              <button class="btn btn-quiet" id="resetJourney" type="button" data-i18n="journey.reset">Start over</button>
+              <button class="btn btn-quiet" id="resetJourney" type="button" data-i18n="journey.reset">Reset</button>
             </div>
           </div>
 
@@ -181,7 +209,7 @@
               <div class="stage-meta">
                 <span class="stage-stepno"><b id="stageStepNum">01</b><span id="stageStepOf">Step 1 of 8</span></span>
                 <span class="stage-time">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
                     <circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>
                   </svg>
                   <span id="stageMinutes">20 min</span>
@@ -192,19 +220,17 @@
             </div>
 
             <div class="stage-content">
-              <p class="stage-kicker" id="stageKicker"></p>
-              <h3 class="stage-title" id="stageTitle"></h3>
-              <p class="stage-summary" id="stageSummary"></p>
+              <div class="stage-header">
+                <p class="stage-kicker" id="stageKicker"></p>
+                <h3 class="stage-title" id="stageTitle"></h3>
+                <p class="stage-summary" id="stageSummary"></p>
+              </div>
 
               <div class="narration-row">
-                <button class="btn btn-ghost play-narration" id="playNarration" type="button">
+                <button class="btn btn-secondary play-narration" id="playNarration" type="button">
                   <svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
                   <svg class="i-stop" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" hidden><rect x="6.5" y="6.5" width="11" height="11" rx="1.5"/></svg>
-                  <span data-i18n="journey.listen">Listen to the guide</span>
-                </button>
-                <button class="auto-toggle" id="autoToggleInline" type="button" aria-pressed="false">
-                  <span class="dot" aria-hidden="true"></span>
-                  <span data-i18n="journey.auto">Auto-advance</span>
+                  <span data-i18n="journey.listen">Listen to guide</span>
                 </button>
               </div>
 
@@ -213,24 +239,26 @@
               <div id="stageDuas"></div>
 
               <div class="stage-footer">
-                <div class="done-state" id="stageDoneState" hidden>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11"/></svg>
-                  <span data-i18n="journey.completed">Completed</span>
+                <div class="stage-complete-group">
+                  <div class="done-state" id="stageDoneState" hidden>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11"/></svg>
+                    <span data-i18n="journey.completed">Completed</span>
+                  </div>
+                  <button class="btn btn-primary" id="markComplete" type="button" data-i18n="journey.markDone">Mark step complete</button>
                 </div>
-                <button class="btn btn-primary" id="markComplete" type="button" data-i18n="journey.markDone">Mark this step complete</button>
+
+                <div class="nav-row">
+                  <button class="btn btn-secondary" id="prevStep" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+                    <span data-i18n="journey.prev">Previous</span>
+                  </button>
+                  <button class="btn btn-secondary" id="nextStep" type="button">
+                    <span data-i18n="journey.next">Next step</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div class="nav-row">
-            <button class="btn btn-ghost" id="prevStep" type="button">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
-              <span data-i18n="journey.prev">Previous</span>
-            </button>
-            <button class="btn btn-primary" id="nextStep" type="button">
-              <span data-i18n="journey.next">Next step</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </button>
           </div>
         </div>
       </div>
@@ -239,77 +267,93 @@
     <section class="section" id="duas">
       <div class="container">
         <div class="section-head reveal">
-          <p class="eyebrow" data-i18n="nav.duas">Duas</p>
+          <p class="eyebrow" data-i18n="duas.eyebrow">Supplication library</p>
           <h2 data-i18n="duas.title">The words that carry you</h2>
-          <p class="lead" data-i18n="duas.subtitle">Every supplication from the walkthrough, gathered in one place. Read the Arabic, follow the transliteration, and listen at your own pace.</p>
+          <p class="lead" data-i18n="duas.subtitle">Every supplication from Umrah and Hajj in one reference — with Arabic script, transliteration, audio, and direct source links.</p>
         </div>
+
         <div class="dua-tools reveal">
           <label class="search-wrap" for="duaSearch">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
-            <input id="duaSearch" type="search" placeholder="Search duas…" data-i18n-placeholder="duas.search" autocomplete="off">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+            <input id="duaSearch" type="search" placeholder="Search Arabic, translation, or reference…" data-i18n-placeholder="duas.search" autocomplete="off">
           </label>
+
+          <div class="dua-filters" id="duaFilters" role="group" aria-label="Filter supplications">
+            <button class="filter-chip is-active" type="button" data-dua-filter="all" data-i18n="duas.filter.all">All</button>
+            <button class="filter-chip" type="button" data-dua-filter="umrah" data-i18n="duas.filter.umrah">Umrah</button>
+            <button class="filter-chip" type="button" data-dua-filter="hajj" data-i18n="duas.filter.hajj">Hajj</button>
+            <button class="filter-chip" type="button" data-dua-filter="quran" data-i18n="duas.filter.quran">Qur’an</button>
+          </div>
+
           <span class="dua-count" id="duaCount"></span>
         </div>
+
         <div class="dua-library" id="duaLibrary"></div>
+        <p class="dua-empty" id="duaEmpty" hidden data-i18n="duas.empty">No supplications match your search.</p>
+        <div class="dua-more-wrap" id="duaMoreWrap" hidden>
+          <button class="btn btn-secondary" id="duaExpandBtn" type="button"></button>
+        </div>
       </div>
     </section>
 
-    <section class="section" id="prepare">
+    <section class="section section-tinted" id="prepare">
       <div class="container">
         <div class="section-head reveal">
-          <p class="eyebrow" data-i18n="prepare.eyebrow">Before you travel</p>
+          <p class="eyebrow" data-i18n="prepare.eyebrow">Preparation</p>
           <h2 data-i18n="prepare.title">Prepare well, so your heart can be present</h2>
-          <p class="lead" data-i18n="prepare.subtitle">Pack with intention. Learn the order. Settle what you owe. The rites are short; the preparation is where the journey begins.</p>
+          <p class="lead" data-i18n="prepare.subtitle">Pack with intention, learn the sequence, and settle obligations before departure.</p>
         </div>
 
         <h3 class="block-title reveal" id="pillarsTitle" data-i18n="prepare.pillars">The four pillars of Umrah</h3>
         <div class="pillars" id="pillars"></div>
 
-        <div class="block-head reveal">
-          <h3 class="block-title" data-i18n="prepare.checklist">Your preparation checklist</h3>
-          <p class="block-note" data-i18n="prepare.checklistHint">Tick items as you pack. Your list is saved on this device.</p>
+        <div class="block-head block-head-split reveal">
+          <div>
+            <h3 class="block-title" data-i18n="prepare.checklist">Packing &amp; readiness checklist</h3>
+            <p class="block-note" data-i18n="prepare.checklistHint">Saved automatically on this device.</p>
+          </div>
+          <div class="check-progress">
+            <div class="progress-track"><div class="progress-fill" id="checkProgressFill"></div></div>
+            <span id="checkProgressText">0 / 0</span>
+          </div>
         </div>
         <div class="prepare-grid" id="checklist"></div>
-        <div class="check-progress reveal">
-          <div class="progress-track"><div class="progress-fill" id="checkProgressFill"></div></div>
-          <span id="checkProgressText">0 / 0</span>
-        </div>
 
         <div class="block-head reveal">
           <h3 class="block-title" data-i18n="prepare.prohibitions">What ihram forbids</h3>
-          <p class="block-note" data-i18n="prepare.prohibitionsHint">These apply from the miqat until you shave or trim.</p>
+          <p class="block-note" data-i18n="prepare.prohibitionsHint">Applies from crossing the miqat until shaving or trimming hair.</p>
         </div>
         <div class="prohibitions" id="prohibitions"></div>
 
         <div class="note-box reveal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.2"/></svg>
-          <p data-i18n="prepare.note">This guide follows the majority understanding and is for education, not a fatwa.</p>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.2"/></svg>
+          <p data-i18n="prepare.note">This guide follows the majority understanding and is for education, not a fatwa. For your specific situation, follow your madhhab and a trusted scholar, and check current Saudi regulations.</p>
         </div>
       </div>
     </section>
 
     <section class="section" id="faq">
-      <div class="container">
-        <div class="section-head reveal">
-          <p class="eyebrow" data-i18n="faq.eyebrow">Questions pilgrims ask</p>
+      <div class="container faq-layout">
+        <div class="section-head faq-intro reveal">
+          <p class="eyebrow" data-i18n="faq.eyebrow">Questions</p>
           <h2 data-i18n="faq.title">Clarity for the road</h2>
-          <p class="lead" data-i18n="faq.subtitle">Short, honest answers — and a reminder to ask a scholar when your situation is specific.</p>
+          <p class="lead" data-i18n="faq.subtitle">Direct answers to common questions — and a reminder to consult a scholar for personal rulings.</p>
         </div>
         <div class="faq-list reveal" id="faqList"></div>
       </div>
     </section>
 
-    <section class="section" id="sources">
+    <section class="section section-tinted" id="sources">
       <div class="container">
         <div class="section-head reveal">
-          <p class="eyebrow" data-i18n="sources.eyebrow">Where this comes from</p>
+          <p class="eyebrow" data-i18n="sources.eyebrow">References</p>
           <h2 data-i18n="sources.title">Every dua has a source</h2>
-          <p class="lead" data-i18n="sources.subtitle">Hadith and Qur’an references link directly to sunnah.com. Grades are shown as published there.</p>
+          <p class="lead" data-i18n="sources.subtitle">Hadith and Qur’an citations link directly to sunnah.com and quran.com with published gradings.</p>
         </div>
         <div class="sources-grid reveal" id="sourcesGrid"></div>
         <div class="note-box reveal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 3.5l2.8 6.1 6.7 2.4-6.7 2.4L12 20.5l-2.8-6.1L2.5 12l6.7-2.4z"/></svg>
-          <p data-i18n="sources.note">Translations are rendered for clarity. The Arabic is authoritative.</p>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M12 3.5l2.8 6.1 6.7 2.4-6.7 2.4L12 20.5l-2.8-6.1L2.5 12l6.7-2.4z"/></svg>
+          <p data-i18n="sources.note">Translations are rendered for clarity. The Arabic text is authoritative.</p>
         </div>
       </div>
     </section>
@@ -321,17 +365,24 @@
         <div class="footer-brand">
           <a class="brand" href="#top" aria-label="Umrah Journey">
             <span class="brand-mark" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M12 2.5l2.6 6.9 6.9 2.6-6.9 2.6L12 21.5l-2.6-6.9L2.5 12l6.9-2.6z"/><circle cx="12" cy="12" r="2.6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+                <rect x="5" y="5" width="14" height="14" rx="1.5"/>
+                <rect x="5" y="5" width="14" height="14" rx="1.5" transform="rotate(45 12 12)"/>
+                <rect x="9.5" y="9.5" width="5" height="5" rx="0.8" fill="currentColor" stroke="none"/>
+              </svg>
             </span>
-            <span class="brand-text"><span class="brand-name">Umrah Journey</span><span class="brand-sub" data-i18n="brand.sub">A guide for the heart</span></span>
+            <span class="brand-text">
+              <span class="brand-name" data-i18n="brand.name">Umrah Journey</span>
+              <span class="brand-sub" data-i18n="brand.sub">Umrah &amp; Hajj Guide</span>
+            </span>
           </a>
-          <p data-i18n="footer.privacy">Privacy first: visits are counted anonymously.</p>
-          <p data-i18n="footer.built">Built for the Ummah, with love and humility.</p>
+          <p data-i18n="footer.privacy">Privacy first: anonymous counts only. No accounts, cookies, ads, or tracking.</p>
+          <p data-i18n="footer.built">A calm, ad-free resource for the Ummah.</p>
         </div>
 
         <div class="footer-col">
-          <h4 data-i18n="footer.explore">Explore</h4>
-          <a href="#journey" data-i18n="nav.journey">The journey</a>
+          <h4 data-i18n="footer.explore">Sections</h4>
+          <a href="#journey" data-i18n="nav.journey">Walkthrough</a>
           <a href="#duas" data-i18n="nav.duas">Duas</a>
           <a href="#prepare" data-i18n="nav.prepare">Prepare</a>
           <a href="#faq" data-i18n="nav.faq">Questions</a>
@@ -339,7 +390,7 @@
         </div>
 
         <div class="footer-col">
-          <h4 data-i18n="footer.more">More</h4>
+          <h4 data-i18n="footer.more">Resources</h4>
           <a href="/admin" data-i18n="nav.admin">Insights</a>
           <a href="https://sunnah.com" target="_blank" rel="noopener noreferrer">sunnah.com</a>
           <a href="https://quran.com" target="_blank" rel="noopener noreferrer">quran.com</a>
@@ -348,7 +399,7 @@
       </div>
 
       <div class="footer-bottom">
-        <span data-i18n="footer.rights">A free resource. Share it with a pilgrim.</span>
+        <span data-i18n="footer.rights">Free to share with any pilgrim.</span>
         <div class="footer-meta">
           <span id="footerVisits">—</span>
           <a href="#top" data-i18n="footer.backTop">Back to top</a>
@@ -367,7 +418,7 @@
           <svg class="credit-github" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.25 5.69.41.35.78 1.05.78 2.12 0 1.53-.01 2.76-.01 3.14 0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/>
           </svg>
-          <span data-i18n="footer.github">Reach out on GitHub</span>
+          <span data-i18n="footer.github">GitHub</span>
           <span class="credit-handle" dir="ltr">@m7sh</span>
         </a>
       </div>
